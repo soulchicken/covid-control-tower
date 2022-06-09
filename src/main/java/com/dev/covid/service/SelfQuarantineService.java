@@ -18,4 +18,8 @@ public class SelfQuarantineService {
 		return repository.findAll();
 	}
 
+	public SelfQuarantine save(SelfQuarantine selfQuarantine) {
+		return repository.save(selfQuarantine);
+	}
+
 }

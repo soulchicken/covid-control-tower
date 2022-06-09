@@ -34,14 +34,25 @@ public class SelfQuarantine {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "patient_people_id")
 	private long patientPeopleId;
+
+	@Column(name = "self_quarantine_people_name")
+	private String selfQuarantineName;
 	
+	@Column(name = "self_quarantine_phone_number")	
+	private String selfQuarantinephoneNumber;
+
 	@Column(name = "self_quarantine_date")
 	private Date selfQuarantineDate;
 	
+	@Column(name = "self_quarantine_release")
+	private Date selfQuarantineRelease;
+	
+	
+
 	public long getPatientPeopleId() {
 		return patientPeopleId;
 	}
-
+	
 	public void setPatientPeopleId(long patientPeopleId) {
 		this.patientPeopleId = patientPeopleId;
 	}
@@ -62,12 +73,12 @@ public class SelfQuarantine {
 		this.selfQuarantineRelease = selfQuarantineRelease;
 	}
 
-	public String getSelfQuarantinename() {
-		return selfQuarantinename;
+	public String getSelfQuarantineName() {
+		return selfQuarantineName;
 	}
 
-	public void setSelfQuarantinename(String selfQuarantinename) {
-		this.selfQuarantinename = selfQuarantinename;
+	public void setSelfQuarantineName(String selfQuarantineName) {
+		this.selfQuarantineName = selfQuarantineName;
 	}
 
 	public String getSelfQuarantinephoneNumber() {
@@ -78,19 +89,11 @@ public class SelfQuarantine {
 		this.selfQuarantinephoneNumber = selfQuarantinephoneNumber;
 	}
 
-	@Column(name = "self_quarantine_release")
-	private Date selfQuarantineRelease;
-	
-	@Column(name = "self_quarantine_people_name")
-	private String selfQuarantinename;
-	
-	@Column(name = "self_quarantine_phone_number")	
-	private String selfQuarantinephoneNumber;
 
 	@Override
 	public String toString() {
 		return "SelfQuarantine [patientPeopleId=" + patientPeopleId + ", selfQuarantineDate=" + selfQuarantineDate
-				+ ", selfQuarantineRelease=" + selfQuarantineRelease + ", selfQuarantinename=" + selfQuarantinename
+				+ ", selfQuarantineRelease=" + selfQuarantineRelease + ", selfQuarantineName=" + selfQuarantineName
 				+ ", selfQuarantinephoneNumber=" + selfQuarantinephoneNumber + "]";
 	}
 
