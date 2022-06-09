@@ -28,6 +28,11 @@ public class SelfQuarantineController {
 		return service.findAll();
 	}
 	
+	@GetMapping("/{id}")
+	public SelfQuarantine findById(@PathVariable("id") Long id) {
+		return service.findById(id);
+	}
+	
 	@GetMapping("date")
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
 		System.out.println(start);

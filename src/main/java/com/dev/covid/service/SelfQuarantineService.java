@@ -46,11 +46,9 @@ public class SelfQuarantineService {
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
-		Date startDate;
-		Date endDate;
 		try {
-			startDate = formatter.parse(start);
-			endDate = formatter.parse(end);
+			Date startDate = formatter.parse(start);
+			Date endDate = formatter.parse(end);
 			return repository.findByselfQuarantineDateBetween(startDate,endDate);
 		} catch (ParseException e) {
 			e.printStackTrace();
@@ -59,13 +57,21 @@ public class SelfQuarantineService {
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(String start, String end) {
-		Date startDate;
-		Date endDate;
 		try {
-			startDate = formatter.parse(start);
-			endDate = formatter.parse(end);
+			Date startDate = formatter.parse(start);
+			Date endDate = formatter.parse(end);
 			return repository.findByselfQuarantineReleaseBetween(startDate,endDate);
 		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public SelfQuarantine findById(Long id) {
+		try {			
+			SelfQuarantine selfQuarantine = repository.findById(id).orElseThrow(Exception::new);
+			return selfQuarantine;
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return null;
