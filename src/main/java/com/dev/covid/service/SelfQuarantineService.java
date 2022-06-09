@@ -53,7 +53,19 @@ public class SelfQuarantineService {
 			endDate = formatter.parse(end);
 			return repository.findByselfQuarantineDateBetween(startDate,endDate);
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(String start, String end) {
+		Date startDate;
+		Date endDate;
+		try {
+			startDate = formatter.parse(start);
+			endDate = formatter.parse(end);
+			return repository.findByselfQuarantineReleaseBetween(startDate,endDate);
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 		return null;

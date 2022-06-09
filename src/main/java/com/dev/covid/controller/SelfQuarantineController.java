@@ -35,6 +35,13 @@ public class SelfQuarantineController {
 		return service.findByselfQuarantineDateBetween(start,end);
 	}
 	
+	@GetMapping("release")
+	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+		System.out.println(start);
+		System.out.println(end);
+		return service.findByselfQuarantineReleaseBetween(start,end);
+	}
+	
 	@PostMapping
 	public SelfQuarantine save(@RequestBody SelfQuarantine selfQuarantine) {
 		return service.save(selfQuarantine);

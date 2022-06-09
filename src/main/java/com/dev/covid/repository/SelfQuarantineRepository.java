@@ -11,4 +11,6 @@ public interface SelfQuarantineRepository extends JpaRepository<SelfQuarantine, 
 
 	List<SelfQuarantine> findByselfQuarantineDateBetween(Date startDate, Date endDate);
 
+	List<SelfQuarantine> findByselfQuarantineReleaseBetween(Date startDate, Date endDate);
+
 }
