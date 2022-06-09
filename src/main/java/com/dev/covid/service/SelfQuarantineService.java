@@ -1,5 +1,8 @@
 package com.dev.covid.service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -11,7 +14,7 @@ import com.dev.covid.repository.SelfQuarantineRepository;
 
 @Service
 public class SelfQuarantineService {
-	
+	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
 	@Autowired
 	private SelfQuarantineRepository repository;
 	
@@ -40,6 +43,20 @@ public class SelfQuarantineService {
 			repository.save(updateSelfQuarantine);			
 		});
 		return repository.findAll();
+	}
+
+	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
+		Date startDate;
+		Date endDate;
+		try {
+			startDate = formatter.parse(start);
+			endDate = formatter.parse(end);
+			return repository.findByselfQuarantineDateBetween(startDate,endDate);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 }

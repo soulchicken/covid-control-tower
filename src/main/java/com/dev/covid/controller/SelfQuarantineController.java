@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dev.covid.model.SelfQuarantine;
@@ -27,6 +28,13 @@ public class SelfQuarantineController {
 		return service.findAll();
 	}
 	
+	@GetMapping("date")
+	public List<SelfQuarantine> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+		System.out.println(start);
+		System.out.println(end);
+		return service.findByselfQuarantineDateBetween(start,end);
+	}
+	
 	@PostMapping
 	public SelfQuarantine save(@RequestBody SelfQuarantine selfQuarantine) {
 		return service.save(selfQuarantine);
@@ -41,4 +49,5 @@ public class SelfQuarantineController {
 	public List<SelfQuarantine> delete(@PathVariable("id") Long id) {
 		return service.delete(id);
 	}
+	
 }
