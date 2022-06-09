@@ -29,4 +29,17 @@ public class SelfQuarantineService {
 		return repository.findAll();
 	}
 
+	public List<SelfQuarantine> put(SelfQuarantine selfQuarantine) {
+		final Optional<SelfQuarantine> foundSelfQuarantine = repository.findById(selfQuarantine.getPatientPeopleId());
+		foundSelfQuarantine.ifPresent(updateSelfQuarantine -> {
+			updateSelfQuarantine.setPatientPeopleId(selfQuarantine.getPatientPeopleId());
+			updateSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
+			updateSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
+			updateSelfQuarantine.setSelfQuarantineName(selfQuarantine.getSelfQuarantineName());
+			updateSelfQuarantine.setSelfQuarantinephoneNumber(selfQuarantine.getSelfQuarantinephoneNumber());
+			repository.save(updateSelfQuarantine);			
+		});
+		return repository.findAll();
+	}
+
 }
