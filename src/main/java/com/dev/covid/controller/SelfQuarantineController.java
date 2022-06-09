@@ -40,15 +40,11 @@ public class SelfQuarantineController {
 	
 	@GetMapping("date")
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
-		System.out.println(start);
-		System.out.println(end);
 		return service.findByselfQuarantineDateBetween(start,end);
 	}
 	
 	@GetMapping("release")
 	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
-		System.out.println(start);
-		System.out.println(end);
 		return service.findByselfQuarantineReleaseBetween(start,end);
 	}
 	

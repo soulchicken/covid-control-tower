@@ -16,8 +16,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-//@Getter
-//@Setter
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -26,7 +26,6 @@ public class SelfQuarantine {
 	
 // 지금은 아이디값 1씩 자동증가로 해놨지만 이후에 OneToOne으로 전환 
 //	@Id
-//	@GeneratedValue(strategy = GenerationType.IDENTITY)
 //	@OneToOne
 //	@JoinColumn(mappedBy = "selfQuarantine")
 //	private Patient patient;
@@ -46,49 +45,6 @@ public class SelfQuarantine {
 	
 	@Column(name = "self_quarantine_release")
 	private Date selfQuarantineRelease;
-	
-	
-
-	public long getPatientPeopleId() {
-		return patientPeopleId;
-	}
-	
-	public void setPatientPeopleId(long patientPeopleId) {
-		this.patientPeopleId = patientPeopleId;
-	}
-
-	public Date getSelfQuarantineDate() {
-		return selfQuarantineDate;
-	}
-
-	public void setSelfQuarantineDate(Date selfQuarantineDate) {
-		this.selfQuarantineDate = selfQuarantineDate;
-	}
-
-	public Date getSelfQuarantineRelease() {
-		return selfQuarantineRelease;
-	}
-
-	public void setSelfQuarantineRelease(Date selfQuarantineRelease) {
-		this.selfQuarantineRelease = selfQuarantineRelease;
-	}
-
-	public String getSelfQuarantineName() {
-		return selfQuarantineName;
-	}
-
-	public void setSelfQuarantineName(String selfQuarantineName) {
-		this.selfQuarantineName = selfQuarantineName;
-	}
-
-	public String getSelfQuarantinephoneNumber() {
-		return selfQuarantinephoneNumber;
-	}
-
-	public void setSelfQuarantinephoneNumber(String selfQuarantinephoneNumber) {
-		this.selfQuarantinephoneNumber = selfQuarantinephoneNumber;
-	}
-
 
 	@Override
 	public String toString() {
