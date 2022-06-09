@@ -77,4 +77,8 @@ public class SelfQuarantineService {
 		return null;
 	}
 
+	public List<SelfQuarantine> findByselfQuarantineName(String name) {
+		return repository.findByselfQuarantineName(name);
+	}
+
 }

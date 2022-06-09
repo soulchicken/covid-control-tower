@@ -33,6 +33,11 @@ public class SelfQuarantineController {
 		return service.findById(id);
 	}
 	
+	@GetMapping("/name/{name}")
+	public List<SelfQuarantine> findByselfQuarantineName(@PathVariable("name") String name) {
+		return service.findByselfQuarantineName(name);
+	}
+	
 	@GetMapping("date")
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
 		System.out.println(start);
