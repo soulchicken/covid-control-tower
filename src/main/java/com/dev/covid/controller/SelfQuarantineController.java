@@ -1,7 +1,9 @@
 package com.dev.covid.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.dev.covid.DTO.SelfQuarantineDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,43 +26,137 @@ public class SelfQuarantineController {
 	private SelfQuarantineService service;
 	
 	@GetMapping
-	public List<SelfQuarantine> findAll() {
-		return service.findAll();
+	public List<SelfQuarantineDTO> findAll() {
+		List<SelfQuarantine> selfQuarantineList = service.findAll();
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(SelfQuarantineDTO
+							.builder()
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 	@GetMapping("/{id}")
-	public SelfQuarantine findById(@PathVariable("id") Long id) {
-		return service.findById(id);
+	public SelfQuarantineDTO findById(@PathVariable("id") Long id) {
+
+		SelfQuarantine selfQuarantine = service.findById(id);
+
+		SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
+								.builder()
+								.patientName(selfQuarantine.getPatient().getPeopleName())
+								.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+								.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+								.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+								.build();
+		return selfQuarantineDTO;
 	}
 	
 	@GetMapping("/name/{name}")
-	public List<SelfQuarantine> findByselfQuarantineName(@PathVariable("name") String name) {
-		return service.findByselfQuarantineName(name);
+	public List<SelfQuarantineDTO> findByselfQuarantineName(@PathVariable("name") String name) {
+		List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineName(name);
+
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(
+					SelfQuarantineDTO
+							.builder()
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 	@GetMapping("date")
-	public List<SelfQuarantine> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
-		return service.findByselfQuarantineDateBetween(start,end);
+	public List<SelfQuarantineDTO> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+
+		List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineDateBetween(start,end);
+
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(
+					SelfQuarantineDTO
+							.builder()
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 	@GetMapping("release")
-	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
-		return service.findByselfQuarantineReleaseBetween(start,end);
+	public List<SelfQuarantineDTO> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+		List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineReleaseBetween(start,end);
+
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(
+					SelfQuarantineDTO
+							.builder()
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 	@PostMapping
-	public SelfQuarantine save(@RequestBody SelfQuarantine selfQuarantine) {
-		return service.save(selfQuarantine);
+	public SelfQuarantineDTO save(@RequestBody SelfQuarantine selfQuarantine) {
+		SelfQuarantineDTO selfQuarantineDTO = service.save(selfQuarantine);
+
+		return selfQuarantineDTO;
 	}
 	
 	@PutMapping
-	public List<SelfQuarantine> put(@RequestBody SelfQuarantine selfQuarantine) {
-		return service.put(selfQuarantine);
+	public List<SelfQuarantineDTO> put(@RequestBody SelfQuarantine putSelfQuarantine) {
+		List<SelfQuarantine> selfQuarantineList = service.put(putSelfQuarantine);
+
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(
+					SelfQuarantineDTO
+							.builder()
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 	@DeleteMapping("/{id}")
-	public List<SelfQuarantine> delete(@PathVariable("id") Long id) {
-		return service.delete(id);
+	public List<SelfQuarantineDTO> delete(@PathVariable("id") Long id) {
+		List<SelfQuarantine> selfQuarantineList = service.delete(id);
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList){
+			selfQuarantineDTOList.add(
+					SelfQuarantineDTO
+							.builder()
+							.patientName(selfQuarantine.getPatient().getPeopleName())
+							.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+							.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+							.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+							.build()
+			);
+		}
+		return selfQuarantineDTOList;
 	}
 	
 }

@@ -1,10 +1,14 @@
 package com.dev.covid.controller;
 
+import com.dev.covid.DTO.PatientDTO;
+import com.dev.covid.DTO.SelfQuarantineDTO;
 import com.dev.covid.model.Patient;
+import com.dev.covid.model.SelfQuarantine;
 import com.dev.covid.service.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -15,47 +19,206 @@ public class PatientController {
 
     /**
      * 전체 환자를 조회를 한다.
-     * @return 전체 환자 목록
      */
     @GetMapping
-    public List<Patient> findAll() {
-        return service.findAll();
+    public List<PatientDTO> findAll() {
+        List<Patient> patientList = service.findAll();
+        List<PatientDTO> patientDTOList = new ArrayList<>();
+        for (Patient patient : patientList){
+            SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
+            SelfQuarantineDTO selfQuarantineDTO;
+            if (selfQuarantine == null) {
+                selfQuarantineDTO = null;
+            } else {
+                selfQuarantineDTO = SelfQuarantineDTO
+                        .builder()
+                        .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                        .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                        .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                        .patientName(patient.getPeopleName())
+                        .build();
+            }
+
+            PatientDTO patientDTO = PatientDTO
+                    .builder()
+                    .peopleName(patient.getPeopleName())
+                    .peopleAge(patient.getPeopleAge())
+                    .peopleHome(patient.getPeopleHome())
+                    .peopleId(patient.getPeopleId())
+                    .peopleGender(patient.getPeopleGender())
+                    .peoplePhone(patient.getPeoplePhone())
+                    .selfQuarantineDTO(selfQuarantineDTO)
+                    .build();
+            patientDTOList.add(patientDTO);
+        }
+        return patientDTOList;
     }
 
-    // post 요청
-    /**
-     * 할 일을 등록한다.
-     * @param todo 새롭게 등록할 할 일 정보
-     * @return 등록된 할 일 정보
-     */
+
+    @GetMapping("/id/{patientId}")
+    public PatientDTO findById(@PathVariable("patientId") Long id) {
+        System.out.println(id);
+        Patient newPatient = service.findById(id);
+
+        SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
+        if (selfQuarantine == null) {
+            PatientDTO patientDTO = PatientDTO
+                    .builder()
+                    .peopleAge(newPatient.getPeopleAge())
+                    .peopleGender(newPatient.getPeopleGender())
+                    .peopleHome(newPatient.getPeopleHome())
+                    .peopleId(newPatient.getPeopleId())
+                    .peopleName(newPatient.getPeopleName())
+                    .peoplePhone(newPatient.getPeoplePhone())
+                    .build();
+            return patientDTO;
+        }
+
+        SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
+                .builder()
+                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                .patientName(newPatient.getPeopleName())
+                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                .build();
+
+        PatientDTO patientDTO = PatientDTO
+                .builder()
+                .peopleAge(newPatient.getPeopleAge())
+                .peopleGender(newPatient.getPeopleGender())
+                .peopleHome(newPatient.getPeopleHome())
+                .peopleId(newPatient.getPeopleId())
+                .peopleName(newPatient.getPeopleName())
+                .peoplePhone(newPatient.getPeoplePhone())
+                .selfQuarantineDTO(selfQuarantineDTO)
+                .build();
+        return patientDTO;
+
+
+    }
+
     @PostMapping
-    public Patient save(@RequestBody Patient patient) {
+    public PatientDTO save(@RequestBody Patient patient) {
         // @RequestBody - 클라이언트에서 보낸 값을 Todo의 필드와 맵핑해서 객체 형태로 바인딩
         System.out.println(patient);
-        return service.save(patient);
+
+        Patient newPatient = service.save(patient);
+        SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
+        if (selfQuarantine == null) {
+            PatientDTO patientDTO = PatientDTO
+                    .builder()
+                    .peopleAge(newPatient.getPeopleAge())
+                    .peopleGender(newPatient.getPeopleGender())
+                    .peopleHome(newPatient.getPeopleHome())
+                    .peopleId(newPatient.getPeopleId())
+                    .peopleName(newPatient.getPeopleName())
+                    .peoplePhone(newPatient.getPeoplePhone())
+                    .build();
+            return patientDTO;
+        }
+
+        SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
+                .builder()
+                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                .patientName(newPatient.getPeopleName())
+                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                .build();
+
+        PatientDTO patientDTO = PatientDTO
+                .builder()
+                .peopleAge(newPatient.getPeopleAge())
+                .peopleGender(newPatient.getPeopleGender())
+                .peopleHome(newPatient.getPeopleHome())
+                .peopleId(newPatient.getPeopleId())
+                .peopleName(newPatient.getPeopleName())
+                .peoplePhone(newPatient.getPeoplePhone())
+                .selfQuarantineDTO(selfQuarantineDTO)
+                .build();
+        return patientDTO;
     }
 
     // putMapping
     /**
      * 할 일을 정보를 갱신한다.
      *
-     * @param todo 바꿀 새로운 할일 정보
-     * @return 갱신된 할 일 정보
      */
     @PutMapping
-    public List<Patient> update(@RequestBody Patient patient) {
-        return service.update(patient);
+    public PatientDTO update(@RequestBody Patient patient) {
+
+        Patient newPatient = service.update(patient);
+        SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
+        if (selfQuarantine == null) {
+            PatientDTO patientDTO = PatientDTO
+                    .builder()
+                    .peopleAge(newPatient.getPeopleAge())
+                    .peopleGender(newPatient.getPeopleGender())
+                    .peopleHome(newPatient.getPeopleHome())
+                    .peopleId(newPatient.getPeopleId())
+                    .peopleName(newPatient.getPeopleName())
+                    .peoplePhone(newPatient.getPeoplePhone())
+                    .build();
+            return patientDTO;
+        }
+
+        SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
+                .builder()
+                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                .patientName(newPatient.getPeopleName())
+                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                .build();
+
+        PatientDTO patientDTO = PatientDTO
+                .builder()
+                .peopleAge(newPatient.getPeopleAge())
+                .peopleGender(newPatient.getPeopleGender())
+                .peopleHome(newPatient.getPeopleHome())
+                .peopleId(newPatient.getPeopleId())
+                .peopleName(newPatient.getPeopleName())
+                .peoplePhone(newPatient.getPeoplePhone())
+                .selfQuarantineDTO(selfQuarantineDTO)
+                .build();
+        return patientDTO;
     }
 
     /**
      *
-     * @param 삭제 할 환자 id
-     * @return
+
      */
     @DeleteMapping("/{patientId}")
-    public List<Patient> delete(@PathVariable("patientId") Long id) {
-        System.out.println(id);
-        return service.delete(id);
+    public List<PatientDTO> delete(@PathVariable("patientId") Long id) {
+
+        List<Patient> patientList = service.delete(id);
+        List<PatientDTO> patientDTOList = new ArrayList<>();
+        for (Patient patient : patientList){
+            SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
+            SelfQuarantineDTO selfQuarantineDTO;
+            if (selfQuarantine == null) {
+                selfQuarantineDTO = null;
+            } else {
+                selfQuarantineDTO = SelfQuarantineDTO
+                        .builder()
+                        .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                        .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                        .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                        .patientName(patient.getPeopleName())
+                        .build();
+            }
+
+            PatientDTO patientDTO = PatientDTO
+                    .builder()
+                    .peopleName(patient.getPeopleName())
+                    .peopleAge(patient.getPeopleAge())
+                    .peopleHome(patient.getPeopleHome())
+                    .peopleId(patient.getPeopleId())
+                    .peopleGender(patient.getPeopleGender())
+                    .peoplePhone(patient.getPeoplePhone())
+                    .selfQuarantineDTO(selfQuarantineDTO)
+                    .build();
+            patientDTOList.add(patientDTO);
+        }
+        return patientDTOList;
     }
 
 }

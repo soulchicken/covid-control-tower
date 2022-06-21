@@ -29,4 +29,7 @@ import javax.persistence.*;
         @Column(name = "people_isdanger", nullable = false)
         //nullable=notnull제약, unique=중복값 불가
         private char peopleIsDanger;
+
+        @OneToOne(fetch = FetchType.EAGER, mappedBy = "patient", cascade = CascadeType.ALL)
+        private SelfQuarantine selfQuarantine;
 }
