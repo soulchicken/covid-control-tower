@@ -2,7 +2,7 @@ package com.dev.covid.DTO;
 
 import lombok.AllArgsConstructor;
 
-import java.util.Date;
+import java.time.LocalDate;
 import lombok.*;
 
 @Data
@@ -12,6 +12,6 @@ import lombok.*;
 public class SelfQuarantineDTO {
     private String patientName;
     private Long selfQuarantineId;
-    private Date selfQuarantineDate;
-    private Date selfQuarantineRelease;
+    private LocalDate selfQuarantineDate;
+    private LocalDate selfQuarantineRelease;
 }

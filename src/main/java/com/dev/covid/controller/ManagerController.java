@@ -1,7 +1,10 @@
 package com.dev.covid.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import com.dev.covid.DTO.ManagerDTO;
+import com.dev.covid.model.Patient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,8 +26,25 @@ public class ManagerController {
 	private ManagerService service;
 	
 	@GetMapping
-	public List<Manager> findAll(){
-		return service.findAll();
+	public List<ManagerDTO> findAll(){
+		List<Manager> managerList = service.findAll();
+		List<ManagerDTO> managerDTOList = new ArrayList<>();
+		for (Manager manager : managerList){
+			List<String> patientNameList = new ArrayList<>();
+			for (Patient patient : manager.getPatientList()){
+				patientNameList.add(patient.getPeopleName());
+			}
+			managerDTOList.add(
+					ManagerDTO
+							.builder()
+							.managerId(manager.getManagerId())
+							.managerName(manager.getManagerName())
+							.managerPhone(manager.getManagerPhone())
+							.patientNameList(patientNameList)
+							.build()
+			);
+		}
+		 return managerDTOList;
 	}
 	
 	@PostMapping
@@ -33,13 +53,49 @@ public class ManagerController {
 	}
 	
 	@PutMapping
-	public List<Manager> put(@RequestBody Manager manager) {
-		return service.put(manager);
+	public List<ManagerDTO> put(@RequestBody Manager updateManager) {
+
+		List<Manager> managerList = service.put(updateManager);
+		List<ManagerDTO> managerDTOList = new ArrayList<>();
+		for (Manager manager : managerList){
+			List<String> patientNameList = new ArrayList<>();
+			for (Patient patient : manager.getPatientList()){
+				patientNameList.add(patient.getPeopleName());
+			}
+			managerDTOList.add(
+					ManagerDTO
+							.builder()
+							.managerId(manager.getManagerId())
+							.managerName(manager.getManagerName())
+							.managerPhone(manager.getManagerPhone())
+							.patientNameList(patientNameList)
+							.build()
+			);
+		}
+		return managerDTOList;
+
 	}
 	
 	@DeleteMapping("/{id}")
-	public List<Manager> delete(@PathVariable("id") Long id) {
-		return service.delete(id);
+	public List<ManagerDTO> delete(@PathVariable("id") Long id) {
+		List<ManagerDTO> managerDTOList = new ArrayList<>();
+		List<Manager> managerList = service.delete(id);
+		for (Manager manager : managerList){
+			List<String> patientNameList = new ArrayList<>();
+			for (Patient patient : manager.getPatientList()){
+				patientNameList.add(patient.getPeopleName());
+			}
+			managerDTOList.add(
+					ManagerDTO
+							.builder()
+							.managerId(manager.getManagerId())
+							.managerName(manager.getManagerName())
+							.managerPhone(manager.getManagerPhone())
+							.patientNameList(patientNameList)
+							.build()
+			);
+		}
+		return managerDTOList;
 	}
 	
 	

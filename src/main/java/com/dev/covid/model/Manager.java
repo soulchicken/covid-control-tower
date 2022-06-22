@@ -1,5 +1,6 @@
 package com.dev.covid.model;
 
+import javax.persistence.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,6 +13,8 @@ import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Builder
 @RequiredArgsConstructor
@@ -31,4 +34,7 @@ public class Manager {
 	
 	@Column(name = "manager_phone")
 	private String managerPhone;
+
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "manager")
+	private List<Patient> patientList;
 }

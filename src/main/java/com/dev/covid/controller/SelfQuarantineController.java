@@ -116,10 +116,16 @@ public class SelfQuarantineController {
 	}
 	
 	@PostMapping
-	public SelfQuarantineDTO save(@RequestBody SelfQuarantine selfQuarantine) {
-		SelfQuarantineDTO selfQuarantineDTO = service.save(selfQuarantine);
-
-		return selfQuarantineDTO;
+	public SelfQuarantineDTO save(@RequestBody SelfQuarantineDTO selfQuarantineDTO) {
+		SelfQuarantine newSelfQuarantine = service.save(selfQuarantineDTO);
+		SelfQuarantineDTO newSelfQuarantineDTO = SelfQuarantineDTO
+				.builder()
+				.patientName(newSelfQuarantine.getPatient().getPeopleName())
+				.selfQuarantineDate(newSelfQuarantine.getSelfQuarantineDate())
+				.selfQuarantineRelease(newSelfQuarantine.getSelfQuarantineRelease())
+				.selfQuarantineId(newSelfQuarantine.getSelfQuarantineId())
+				.build();
+		return newSelfQuarantineDTO;
 	}
 	
 	@PutMapping

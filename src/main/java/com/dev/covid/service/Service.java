@@ -1,11 +1,12 @@
 package com.dev.covid.service;
 
+import com.dev.covid.DTO.PatientDTO;
 import com.dev.covid.model.Patient;
 
 import java.util.List;
 
 public interface Service {
-    Patient save(Patient patient);
+    Patient save(PatientDTO patientDTO);
 
     Patient update(Patient patient);
 
