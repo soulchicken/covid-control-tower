@@ -44,6 +44,7 @@ public class PatientController {
                     .peopleName(patient.getPeopleName())
                     .peopleAge(patient.getPeopleAge())
                     .peopleHome(patient.getPeopleHome())
+                    .managerId(patient.getManager().getManagerId())
                     .peopleId(patient.getPeopleId())
                     .peopleGender(patient.getPeopleGender())
                     .peoplePhone(patient.getPeoplePhone())
@@ -57,7 +58,6 @@ public class PatientController {
 
     @GetMapping("/id/{patientId}")
     public PatientDTO findById(@PathVariable("patientId") Long id) {
-        System.out.println(id);
         Patient newPatient = service.findById(id);
 
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
@@ -67,6 +67,7 @@ public class PatientController {
                     .peopleAge(newPatient.getPeopleAge())
                     .peopleGender(newPatient.getPeopleGender())
                     .peopleHome(newPatient.getPeopleHome())
+                    .managerId(newPatient.getManager().getManagerId())
                     .peopleId(newPatient.getPeopleId())
                     .peopleName(newPatient.getPeopleName())
                     .peoplePhone(newPatient.getPeoplePhone())
@@ -87,6 +88,7 @@ public class PatientController {
                 .peopleAge(newPatient.getPeopleAge())
                 .peopleGender(newPatient.getPeopleGender())
                 .peopleHome(newPatient.getPeopleHome())
+                .managerId(newPatient.getManager().getManagerId())
                 .peopleId(newPatient.getPeopleId())
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
@@ -98,20 +100,19 @@ public class PatientController {
     }
 
     @PostMapping
-    public PatientDTO save(@RequestBody Patient patient) {
-        // @RequestBody - 클라이언트에서 보낸 값을 Todo의 필드와 맵핑해서 객체 형태로 바인딩
-        System.out.println(patient);
-
-        Patient newPatient = service.save(patient);
+    public PatientDTO save(@RequestBody PatientDTO newPatientDTO) {
+        Patient newPatient = service.save(newPatientDTO);
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
             PatientDTO patientDTO = PatientDTO
                     .builder()
                     .peopleAge(newPatient.getPeopleAge())
+                    .managerId(newPatient.getManager().getManagerId())
                     .peopleGender(newPatient.getPeopleGender())
                     .peopleHome(newPatient.getPeopleHome())
                     .peopleId(newPatient.getPeopleId())
                     .peopleName(newPatient.getPeopleName())
+                    .managerId(newPatient.getManager().getManagerId())
                     .peoplePhone(newPatient.getPeoplePhone())
                     .build();
             return patientDTO;
@@ -131,6 +132,7 @@ public class PatientController {
                 .peopleGender(newPatient.getPeopleGender())
                 .peopleHome(newPatient.getPeopleHome())
                 .peopleId(newPatient.getPeopleId())
+                .managerId(newPatient.getManager().getManagerId())
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
                 .selfQuarantineDTO(selfQuarantineDTO)
@@ -156,6 +158,7 @@ public class PatientController {
                     .peopleHome(newPatient.getPeopleHome())
                     .peopleId(newPatient.getPeopleId())
                     .peopleName(newPatient.getPeopleName())
+                    .managerId(newPatient.getManager().getManagerId())
                     .peoplePhone(newPatient.getPeoplePhone())
                     .build();
             return patientDTO;
@@ -174,6 +177,7 @@ public class PatientController {
                 .peopleAge(newPatient.getPeopleAge())
                 .peopleGender(newPatient.getPeopleGender())
                 .peopleHome(newPatient.getPeopleHome())
+                .managerId(newPatient.getManager().getManagerId())
                 .peopleId(newPatient.getPeopleId())
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
@@ -182,10 +186,6 @@ public class PatientController {
         return patientDTO;
     }
 
-    /**
-     *
-
-     */
     @DeleteMapping("/{patientId}")
     public List<PatientDTO> delete(@PathVariable("patientId") Long id) {
 

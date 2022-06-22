@@ -1,6 +1,9 @@
 package com.dev.covid.service;
 
+import com.dev.covid.DTO.PatientDTO;
+import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
+import com.dev.covid.repository.ManagerRepository;
 import com.dev.covid.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,8 +15,23 @@ public class PatientService implements Service {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private ManagerRepository managerRepository;
+
     @Override
-    public Patient save(Patient patient) {
+    public Patient save(PatientDTO patientDTO) {
+        Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
+        Patient patient = new Patient();
+        foundManager.ifPresent(manager -> {
+            patient.setManager(manager);
+                }
+        );
+
+        patient.setPeoplePhone(patientDTO.getPeoplePhone());
+        patient.setPeopleHome(patientDTO.getPeopleHome());
+        patient.setPeopleGender(patientDTO.getPeopleGender());
+        patient.setPeopleName(patientDTO.getPeopleName());
+        patient.setPeopleAge(patientDTO.getPeopleAge());
         return patientRepository.save(patient);
     }
 
@@ -55,6 +73,7 @@ public class PatientService implements Service {
             newPatient.setPeopleName(patient.getPeopleName());
             newPatient.setPeopleGender(patient.getPeopleGender());
             newPatient.setPeopleHome(patient.getPeopleHome());
+            newPatient.setManager(patient.getManager());
             newPatient.setPeoplePhone(patient.getPeoplePhone());
             newPatient.setSelfQuarantine(patient.getSelfQuarantine());
             newPatient.setPeopleId(patient.getPeopleId());

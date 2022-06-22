@@ -32,4 +32,8 @@ import javax.persistence.*;
 
         @OneToOne(fetch = FetchType.EAGER, mappedBy = "patient", cascade = CascadeType.ALL)
         private SelfQuarantine selfQuarantine;
+
+        @ManyToOne(fetch = FetchType.LAZY, targetEntity = Manager.class)
+        @JoinColumn(name = "manager_id")
+        private Manager manager;
 }

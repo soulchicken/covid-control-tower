@@ -2,6 +2,9 @@ package com.dev.covid.service;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -28,26 +31,19 @@ public class SelfQuarantineService {
 		return selfQuarantineRepository.findAll();
 	}
 
-	public SelfQuarantineDTO save(SelfQuarantine selfQuarantine) {
-		String name = selfQuarantine.getSelfQuarantineName();
-		Patient patient = patientRepository.findByPeopleName(name);
+	public SelfQuarantine save(SelfQuarantineDTO selfQuarantineDTO) {
+		Patient patient = patientRepository.findByPeopleName(selfQuarantineDTO.getPatientName());
 		SelfQuarantine newSelfQuarantine = SelfQuarantine
 				.builder()
-				.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-				.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+				.selfQuarantineDate(selfQuarantineDTO.getSelfQuarantineDate())
+				.selfQuarantineRelease(selfQuarantineDTO.getSelfQuarantineRelease())
 				.selfQuarantineName(patient.getPeopleName())
 				.patient(patient)
 				.build();
-		patient.setSelfQuarantine(newSelfQuarantine);
-		selfQuarantineRepository.save(newSelfQuarantine);
-		SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
-				.builder()
-				.patientName(patient.getPeopleName())
-				.selfQuarantineId(newSelfQuarantine.getSelfQuarantineId())
-				.selfQuarantineDate(newSelfQuarantine.getSelfQuarantineDate())
-				.selfQuarantineRelease(newSelfQuarantine.getSelfQuarantineRelease())
-				.build();
-		return selfQuarantineDTO;
+		SelfQuarantine madenSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
+		patient.setSelfQuarantine(madenSelfQuarantine);
+		patientRepository.save(patient);
+		return madenSelfQuarantine;
 	}
 
 	public List<SelfQuarantine> delete(Long id) {
@@ -67,25 +63,19 @@ public class SelfQuarantineService {
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
-		try {
-			Date startDate = formatter.parse(start);
-			Date endDate = formatter.parse(end);
-			return selfQuarantineRepository.findByselfQuarantineDateBetween(startDate,endDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
+		LocalDate startDate = LocalDate.parse(start);
+		LocalDate endDate = LocalDate.parse(end);
+		System.out.println("스타트 데이트 "+start);
+		System.out.println("엔드 데이트 "+end);
+		return selfQuarantineRepository.findByselfQuarantineDateBetween(startDate,endDate);
+
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineReleaseBetween(String start, String end) {
-		try {
-			Date startDate = formatter.parse(start);
-			Date endDate = formatter.parse(end);
-			return selfQuarantineRepository.findByselfQuarantineReleaseBetween(startDate,endDate);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		return null;
+		LocalDate startDate = LocalDate.parse(start);
+		LocalDate endDate = LocalDate.parse(end);
+		return selfQuarantineRepository.findByselfQuarantineReleaseBetween(startDate,endDate);
+
 	}
 
 	public SelfQuarantine findById(Long id) {

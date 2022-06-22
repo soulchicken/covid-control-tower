@@ -1,6 +1,6 @@
 package com.dev.covid.model;
 
-import java.util.Date;
+import java.time.LocalDate;
 
 import javax.persistence.*;
 
@@ -28,10 +28,10 @@ public class SelfQuarantine {
 	private String selfQuarantineName;
 
 	@Column(name = "self_quarantine_date")
-	private Date selfQuarantineDate;
+	private LocalDate selfQuarantineDate;
 	
 	@Column(name = "self_quarantine_release")
-	private Date selfQuarantineRelease;
+	private LocalDate selfQuarantineRelease;
 
 	@Override
 	public String toString() {
