@@ -2,20 +2,19 @@ package com.dev.covid.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
+import java.util.List;
 
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Setter
 @Getter
+@ToString
 @Entity
-@Table(name = "hospital")
 public class Hospital {
     @Id
-    @Column(name = "hospital_id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hospital_id", nullable = false)
     private Long hospitalId;
 
     @Column(name = "hospital_name")
@@ -29,4 +28,8 @@ public class Hospital {
 
     @Column(name = "hospital_roomlimit")
     private int hospitalRoomlimit;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hospital", cascade = CascadeType.ALL)
+    private List<HospitalRoom> hospitalRoomList;
+
 }
