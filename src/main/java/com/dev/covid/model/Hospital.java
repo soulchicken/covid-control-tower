@@ -25,7 +25,6 @@ public class Hospital {
     @Column(name = "hospital_id", nullable = false)
 
 
-
     private Long hospitalId;
 
     @Column(name = "hospital_name")

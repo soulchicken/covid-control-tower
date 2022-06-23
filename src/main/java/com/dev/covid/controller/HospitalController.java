@@ -1,7 +1,6 @@
 package com.dev.covid.controller;
 
 
-
 import com.dev.covid.DTO.HospitalDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.model.HospitalRoom;
@@ -28,10 +27,10 @@ public class HospitalController {
 
     public List<HospitalDTO> findAll() {
         List<Hospital> hospitalList = hospitalService.findAll();
-        List<HospitalDTO>  hospitalDTOList = new ArrayList<>();
-        for (Hospital hospital : hospitalList){
+        List<HospitalDTO> hospitalDTOList = new ArrayList<>();
+        for (Hospital hospital : hospitalList) {
             List<Long> hospitalRoomNumberList = new ArrayList<>();
-            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()){
+            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()) {
                 hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
             }
             hospitalDTOList.add(
@@ -48,7 +47,7 @@ public class HospitalController {
         }
         return hospitalDTOList;
 
-  
+
     }
 
     // 삽입
@@ -63,10 +62,10 @@ public class HospitalController {
     public List<HospitalDTO> update(@RequestBody Hospital Updatehospital) {
 
         List<Hospital> hospitalList = hospitalService.update(Updatehospital);
-        List<HospitalDTO>  hospitalDTOList = new ArrayList<>();
-        for (Hospital hospital : hospitalList){
+        List<HospitalDTO> hospitalDTOList = new ArrayList<>();
+        for (Hospital hospital : hospitalList) {
             List<Long> hospitalRoomNumberList = new ArrayList<>();
-            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()){
+            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()) {
                 hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
             }
             hospitalDTOList.add(
@@ -84,7 +83,6 @@ public class HospitalController {
         return hospitalDTOList;
 
 
-
     }
 
     // 삭제
@@ -92,10 +90,10 @@ public class HospitalController {
 
     public List<HospitalDTO> delete(@PathVariable("id") Long id) {
         List<Hospital> hospitalList = hospitalService.delete(id);
-        List<HospitalDTO>  hospitalDTOList = new ArrayList<>();
-        for (Hospital hospital : hospitalList){
+        List<HospitalDTO> hospitalDTOList = new ArrayList<>();
+        for (Hospital hospital : hospitalList) {
             List<Long> hospitalRoomNumberList = new ArrayList<>();
-            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()){
+            for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()) {
                 hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
             }
             hospitalDTOList.add(

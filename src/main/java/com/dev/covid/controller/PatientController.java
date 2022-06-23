@@ -24,7 +24,7 @@ public class PatientController {
     public List<PatientDTO> findAll() {
         List<Patient> patientList = service.findAll();
         List<PatientDTO> patientDTOList = new ArrayList<>();
-        for (Patient patient : patientList){
+        for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
             SelfQuarantineDTO selfQuarantineDTO;
             if (selfQuarantine == null) {
@@ -141,9 +141,9 @@ public class PatientController {
     }
 
     // putMapping
+
     /**
      * 할 일을 정보를 갱신한다.
-     *
      */
     @PutMapping
     public PatientDTO update(@RequestBody Patient patient) {
@@ -191,7 +191,7 @@ public class PatientController {
 
         List<Patient> patientList = service.delete(id);
         List<PatientDTO> patientDTOList = new ArrayList<>();
-        for (Patient patient : patientList){
+        for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
             SelfQuarantineDTO selfQuarantineDTO;
             if (selfQuarantine == null) {
