@@ -44,7 +44,4 @@ public class Hospital {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalRoom> hospitalRoomList;
 
-
-    @Column(name = "hospital_roomlimit")
-    private int hospitalRoomlimit;
 }
