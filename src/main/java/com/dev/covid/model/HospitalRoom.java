@@ -3,11 +3,7 @@ package com.dev.covid.model;
 import lombok.*;
 
 
-
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 
 @RequiredArgsConstructor
@@ -19,13 +15,10 @@ import javax.persistence.Table;
 public class HospitalRoom {
     @Id
     @Column(name = "hospitalroom_roomnumber")
-
     private Long hospitalroomRoomnumber;
 
-
     @Column(name = "hospitalroom_capacity")
-    private int hospitalroomCapacity;
-
+    private long hospitalroomCapacity;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Hospital.class)
     @JoinColumn(name = "hospital_id")

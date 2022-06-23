@@ -11,7 +11,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class HospitalRoomDTO {
-    private int hospitalroomRoomnumber;
-    private int hospitalroomCapacity;
-    private Long hospitalId;
+    private long hospitalroomRoomnumber;
+    private long hospitalroomCapacity;
+
+
+
+
+
 }

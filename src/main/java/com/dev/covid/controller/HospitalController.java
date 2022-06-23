@@ -8,8 +8,12 @@ import com.dev.covid.model.HospitalRoom;
 import com.dev.covid.model.Patient;
 
 import com.dev.covid.model.Hospital;
+import com.dev.covid.service.HospitalService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 @RestController
