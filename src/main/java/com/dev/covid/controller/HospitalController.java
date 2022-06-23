@@ -1,16 +1,16 @@
 package com.dev.covid.controller;
 
 
+
 import com.dev.covid.DTO.HospitalDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.model.HospitalRoom;
 import com.dev.covid.model.Patient;
-import com.dev.covid.service.HospitalService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+
+import com.dev.covid.model.Hospital;
 
 import java.util.ArrayList;
-import java.util.List;
+
 
 @RestController
 @RequestMapping("hospital")
@@ -21,6 +21,7 @@ public class HospitalController {
 
     // 조회
     @GetMapping
+
     public List<HospitalDTO> findAll() {
         List<Hospital> hospitalList = hospitalService.findAll();
         List<HospitalDTO>  hospitalDTOList = new ArrayList<>();
@@ -42,6 +43,8 @@ public class HospitalController {
             );
         }
         return hospitalDTOList;
+
+  
     }
 
     // 삽입
@@ -52,6 +55,7 @@ public class HospitalController {
 
     // 수정
     @PutMapping
+
     public List<HospitalDTO> update(@RequestBody Hospital Updatehospital) {
 
         List<Hospital> hospitalList = hospitalService.update(Updatehospital);
@@ -74,10 +78,14 @@ public class HospitalController {
             );
         }
         return hospitalDTOList;
+
+
+
     }
 
     // 삭제
     @DeleteMapping("/{id}")
+
     public List<HospitalDTO> delete(@PathVariable("id") Long id) {
         List<Hospital> hospitalList = hospitalService.delete(id);
         List<HospitalDTO>  hospitalDTOList = new ArrayList<>();
@@ -99,5 +107,7 @@ public class HospitalController {
             );
         }
         return hospitalDTOList;
+
+
     }
 }
