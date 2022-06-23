@@ -15,7 +15,4 @@ public class HospitalRoomDTO {
     private long hospitalroomCapacity;
 
 
-
-
-
 }

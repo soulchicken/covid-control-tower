@@ -3,6 +3,7 @@ package com.dev.covid.DTO;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
+
 import lombok.*;
 
 @Data

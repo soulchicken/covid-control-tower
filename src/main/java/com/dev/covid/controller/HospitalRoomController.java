@@ -26,7 +26,7 @@ public class HospitalRoomController {
     public List<HospitalRoomDTO> findAll() {
         List<HospitalRoom> hospitalRoomList = hospitalroomService.findAll();
         List<HospitalRoomDTO> hospitalRoomDTOList = new ArrayList<>();
-        for (HospitalRoom hospitalRoom : hospitalRoomList){
+        for (HospitalRoom hospitalRoom : hospitalRoomList) {
 
             HospitalRoomDTO hospitalRoomDTO = HospitalRoomDTO
                     .builder()
@@ -49,7 +49,7 @@ public class HospitalRoomController {
     public List<HospitalRoomDTO> update(@RequestBody HospitalRoom hospitalroom) {
         List<HospitalRoom> hospitalRoomList = hospitalroomService.update(hospitalroom);
         List<HospitalRoomDTO> hospitalRoomDTOList = new ArrayList<>();
-        for (HospitalRoom hospitalRoom : hospitalRoomList){
+        for (HospitalRoom hospitalRoom : hospitalRoomList) {
 
             HospitalRoomDTO hospitalRoomDTO = HospitalRoomDTO
                     .builder()
@@ -66,7 +66,7 @@ public class HospitalRoomController {
     public List<HospitalRoomDTO> delete(@PathVariable("id") Long id) {
         List<HospitalRoom> hospitalRoomList = hospitalroomService.delete(id);
         List<HospitalRoomDTO> hospitalRoomDTOList = new ArrayList<>();
-        for (HospitalRoom hospitalRoom : hospitalRoomList){
+        for (HospitalRoom hospitalRoom : hospitalRoomList) {
 
             HospitalRoomDTO hospitalRoomDTO = HospitalRoomDTO
                     .builder()
