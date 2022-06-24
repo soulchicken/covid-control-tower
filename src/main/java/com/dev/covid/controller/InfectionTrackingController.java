@@ -3,12 +3,14 @@ package com.dev.covid.controller;
 import com.dev.covid.DTO.InfectionTrackingDTO;
 import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.InfectionTracking;
+import com.dev.covid.model.Patient;
 import com.dev.covid.service.InfectionTrackingService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -19,8 +21,23 @@ public class InfectionTrackingController {
     private InfectionTrackingService infectionTrackingService;
 
     @GetMapping
-    public List<InfectionTracking> findAll() {
-        return infectionTrackingService.findAll();
+    public ResponseEntity<?> findAll() {
+        List<InfectionTracking> infectionTrackingList = infectionTrackingService.findAll();
+        List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
+        for (InfectionTracking infectionTracking : infectionTrackingList){
+            infectionTrackingDTOList.add(
+                    InfectionTrackingDTO
+                            .builder()
+                            .infectionTrackingId(infectionTracking.getInfectionTrackingId())
+                            .patientPeopleId(infectionTracking.getPatient().getPeopleId())
+                            .infectionTrackingName(infectionTracking.getInfectionTrackingName())
+                            .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
+                            .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
+                            .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
+                            .build()
+            );
+        }
+        return ResponseEntity.ok(infectionTrackingDTOList);
     }
 
     @PostMapping
