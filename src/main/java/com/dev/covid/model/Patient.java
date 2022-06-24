@@ -38,6 +38,6 @@ public class Patient {
     private Manager manager;
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Hospital.class)
-    @JoinColumn(name = "hospital_id")
+    @JoinColumn(name = "hospital_id", nullable = false)
     private Hospital hospital;
 }

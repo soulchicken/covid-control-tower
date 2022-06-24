@@ -22,13 +22,12 @@ import java.util.List;
 public class PatientController {
     @Autowired
     private Service service;
-    Logger logger = LoggerFactory.getLogger(PatientController.class);
     /**
      * 전체 환자를 조회를 한다.
      */
     @GetMapping
     public List<PatientDTO> findAll() {
-        logger.info("에러 발생입니다.");
+        log.info("에러 발생입니다.");
         List<Patient> patientList = service.findAll();
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for (Patient patient : patientList) {
@@ -67,7 +66,7 @@ public class PatientController {
                     .peopleGender(patient.getPeopleGender())
                     .peoplePhone(patient.getPeoplePhone())
                     .selfQuarantineDTO(selfQuarantineDTO)
-
+                    .hospitalId(patient.getHospital().getHospitalId())
                     .build();
             patientDTOList.add(patientDTO);
         }
