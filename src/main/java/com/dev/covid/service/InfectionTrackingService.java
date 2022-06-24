@@ -63,15 +63,11 @@ public class InfectionTrackingService {
         return repository.findAll();
     }
 
-    public List<InfectionTracking> delete(Long id) {
-        final Optional<InfectionTracking> findInfectionTracking = repository.findById(id);
+    public List<InfectionTracking> delete(Long id) throws Exception {
+            InfectionTracking findInfectionTracking = repository.findById(id).get();
+            repository.delete(findInfectionTracking);
+            return repository.findAll();
 
-        findInfectionTracking.ifPresent(infectionTracking -> {
-            // programList : 삭제하고자 하는 엔터티
-            repository.delete(infectionTracking);
-        });
-
-        return repository.findAll();
     }
 
 }

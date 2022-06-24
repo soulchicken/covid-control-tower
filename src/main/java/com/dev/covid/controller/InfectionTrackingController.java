@@ -67,8 +67,30 @@ public class InfectionTrackingController {
     }
 
     @DeleteMapping("/{id}")
-    public List<InfectionTracking> delete(@PathVariable("id") Long id) {
-        return infectionTrackingService.delete(id);
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        try {
+            List<InfectionTracking> infectionTrackingList = infectionTrackingService.delete(id);
+            List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
+            for (InfectionTracking infectionTracking : infectionTrackingList){
+                infectionTrackingDTOList.add(
+                        InfectionTrackingDTO
+                                .builder()
+                                .infectionTrackingId(infectionTracking.getInfectionTrackingId())
+                                .patientPeopleId(infectionTracking.getPatient().getPeopleId())
+                                .infectionTrackingName(infectionTracking.getInfectionTrackingName())
+                                .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
+                                .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
+                                .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
+                                .build()
+                );
+            }
+            return ResponseEntity.ok(infectionTrackingDTOList);
+        } catch (Exception e){
+            log.warn("Not found Patient ID {}", id);
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
+
     }
 
 }
