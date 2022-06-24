@@ -19,7 +19,7 @@ public class PatientService implements Service {
     private ManagerRepository managerRepository;
 
     @Override
-    public Patient save(PatientDTO patientDTO) {
+    public Patient save(PatientDTO patientDTO) throws Exception {
         Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
         Patient patient = new Patient();
         foundManager.ifPresent(manager -> {
@@ -55,7 +55,7 @@ public class PatientService implements Service {
     }
 
     @Override
-    public List<Patient> delete(Long id) {
+    public List<Patient> delete(Long id) throws Exception {
         final Optional<Patient> foundPatient = patientRepository.findById(id);
 
         foundPatient.ifPresent(patient -> {

@@ -6,13 +6,13 @@ import com.dev.covid.model.Patient;
 import java.util.List;
 
 public interface Service {
-    Patient save(PatientDTO patientDTO);
+    Patient save(PatientDTO patientDTO) throws Exception;
 
     Patient update(Patient patient);
 
     List<Patient> findAll();
 
-    List<Patient> delete(Long id);
+    List<Patient> delete(Long id) throws Exception;
 
     Patient findById(Long id);
 }
