@@ -55,6 +55,7 @@ public class InfectionTrackingController {
                     .build();
             return ResponseEntity.ok(newInfectionTrackingDTO);
         } catch (Exception e) {
+            log.error("Not found Patient ID {} " + e.getMessage(), infectionTrackingDTO.getPatientPeopleId());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
@@ -86,7 +87,7 @@ public class InfectionTrackingController {
             }
             return ResponseEntity.ok(infectionTrackingDTOList);
         } catch (Exception e){
-            log.warn("Not found Patient ID {}", id);
+            log.error("Not found Patient ID {} " + e.getMessage(), id);
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }

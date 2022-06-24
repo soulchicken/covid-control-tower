@@ -26,10 +26,8 @@ public class InfectionTrackingService {
         return repository.findAll();
     }
 
-    public InfectionTracking save(InfectionTrackingDTO infectionTrackingDTO) {
-        try {
+    public InfectionTracking save(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
             Patient patient = patientRepository.findById(infectionTrackingDTO.getPatientPeopleId()).get();
-
             InfectionTracking infectionTracking = InfectionTracking
                     .builder()
                     .infectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea())
@@ -40,13 +38,6 @@ public class InfectionTrackingService {
                     .patient(patient)
                     .build();
             return repository.save(infectionTracking);
-
-
-        } catch (Exception e){
-            log.warn("Not found Patient ID {}", infectionTrackingDTO.getPatientPeopleId());
-            throw new RuntimeException(e.getMessage());
-        }
-
     }
 
     public List<InfectionTracking> update(InfectionTracking infectionTracking) {
