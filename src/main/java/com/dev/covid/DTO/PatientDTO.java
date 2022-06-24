@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -18,4 +20,5 @@ public class PatientDTO {
     private String peoplePhone;
     private SelfQuarantineDTO selfQuarantineDTO;
     private Long managerId;
+    private List<InfectionTrackingDTO> infectionTrackingDTOList;
 }
