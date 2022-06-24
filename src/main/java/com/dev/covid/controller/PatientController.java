@@ -1,10 +1,15 @@
 package com.dev.covid.controller;
 
+import com.dev.covid.DTO.HospitalDTO;
 import com.dev.covid.DTO.PatientDTO;
 import com.dev.covid.DTO.SelfQuarantineDTO;
+import com.dev.covid.model.Hospital;
 import com.dev.covid.model.Patient;
 import com.dev.covid.model.SelfQuarantine;
 import com.dev.covid.service.Service;
+import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,23 +17,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("api/patient")
 public class PatientController {
     @Autowired
     private Service service;
-
+    Logger logger = LoggerFactory.getLogger(PatientController.class);
     /**
      * 전체 환자를 조회를 한다.
      */
     @GetMapping
     public List<PatientDTO> findAll() {
+        logger.info("에러 발생입니다.");
         List<Patient> patientList = service.findAll();
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
+            Hospital hospital = patient.getHospital();
+            HospitalDTO hospitalDTO;
             SelfQuarantineDTO selfQuarantineDTO;
-            if (selfQuarantine == null) {
+            if (selfQuarantine == null || hospital == null) {
                 selfQuarantineDTO = null;
+                hospital = null;
             } else {
                 selfQuarantineDTO = SelfQuarantineDTO
                         .builder()
@@ -36,6 +46,14 @@ public class PatientController {
                         .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
                         .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
                         .patientName(patient.getPeopleName())
+                        .build();
+                hospitalDTO = HospitalDTO
+                        .builder()
+                        .hospitalRoomlimit(hospital.getHospitalRoomlimit())
+                        .hospitalPatientnum(hospital.getHospitalPatientnum())
+                        .hospitalRoom(hospital.getHospitalRoom())
+                        .hospitalName(hospital.getHospitalName())
+                        .hospitalId(hospital.getHospitalId())
                         .build();
             }
 
@@ -49,6 +67,7 @@ public class PatientController {
                     .peopleGender(patient.getPeopleGender())
                     .peoplePhone(patient.getPeoplePhone())
                     .selfQuarantineDTO(selfQuarantineDTO)
+
                     .build();
             patientDTOList.add(patientDTO);
         }
