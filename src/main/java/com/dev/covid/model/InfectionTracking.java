@@ -33,4 +33,8 @@ public class InfectionTracking {
     @Column(name = "patient_people_id")
     private Long patientPeopleId;
 
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Patient.class) // student와 major의 관계는 다대일 (N:1)
+    @JoinColumn(name = "people_id")
+    private Patient patient;
+
 }
