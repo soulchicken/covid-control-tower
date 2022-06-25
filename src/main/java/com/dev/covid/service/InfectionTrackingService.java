@@ -40,24 +40,23 @@ public class InfectionTrackingService {
             return repository.save(infectionTracking);
     }
 
-    public List<InfectionTracking> update(InfectionTracking infectionTracking) {
-        final Optional<InfectionTracking> findInfectionTracking = repository.findById(infectionTracking.getInfectionTrackingId());
+    public List<InfectionTracking> update(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
+            final InfectionTracking findInfectionTracking = repository.findById(infectionTrackingDTO.getInfectionTrackingId()).get();
 
-        findInfectionTracking.ifPresent(newInfectionTracking -> {
-            newInfectionTracking.setInfectionTrackingName(infectionTracking.getInfectionTrackingName());
-            newInfectionTracking.setInfectionTrackingArea(infectionTracking.getInfectionTrackingArea());
-            newInfectionTracking.setInfectionTrackingDate(infectionTracking.getInfectionTrackingDate());
-            newInfectionTracking.setInfectionTrackingCause(infectionTracking.getInfectionTrackingCause());
+            findInfectionTracking.setInfectionTrackingName(infectionTrackingDTO.getInfectionTrackingName());
+            findInfectionTracking.setInfectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea());
+            findInfectionTracking.setInfectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate());
+            findInfectionTracking.setInfectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause());
 
-            repository.save(newInfectionTracking);
-        });
-        return repository.findAll();
+            repository.save(findInfectionTracking);
+            return repository.findAll();
     }
 
-    public List<InfectionTracking> delete(Long id) throws Exception {
-            InfectionTracking findInfectionTracking = repository.findById(id).get();
-            repository.delete(findInfectionTracking);
-            return repository.findAll();
+    public List<InfectionTracking> delete(Long id) {
+
+        InfectionTracking findInfectionTracking = repository.findById(id).get();
+        repository.delete(findInfectionTracking);
+        return repository.findAll();
 
     }
 

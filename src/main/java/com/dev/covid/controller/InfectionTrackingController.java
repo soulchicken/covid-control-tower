@@ -63,8 +63,29 @@ public class InfectionTrackingController {
     }
 
     @PutMapping
-    public List<InfectionTracking> update(@RequestBody InfectionTracking infectionTracking) {
-        return infectionTrackingService.update(infectionTracking);
+    public ResponseEntity<?> update(@RequestBody InfectionTrackingDTO infectionTrackingDTO) {
+        try {
+            List<InfectionTracking> infectionTrackingList = infectionTrackingService.update(infectionTrackingDTO);
+            List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
+            for (InfectionTracking oneInfectionTracking : infectionTrackingList){
+                infectionTrackingDTOList.add(
+                        InfectionTrackingDTO
+                                .builder()
+                                .infectionTrackingId(oneInfectionTracking.getInfectionTrackingId())
+                                .patientPeopleId(oneInfectionTracking.getPatient().getPeopleId())
+                                .infectionTrackingName(oneInfectionTracking.getInfectionTrackingName())
+                                .infectionTrackingDate(oneInfectionTracking.getInfectionTrackingDate())
+                                .infectionTrackingCause(oneInfectionTracking.getInfectionTrackingCause())
+                                .infectionTrackingArea(oneInfectionTracking.getInfectionTrackingArea())
+                                .build()
+                );
+            }
+            return ResponseEntity.ok(infectionTrackingDTOList);
+        } catch (Exception e){
+            log.error("Not found infectionTracking ID {} " + e.getMessage(), infectionTrackingDTO.getInfectionTrackingId());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @DeleteMapping("/{id}")
