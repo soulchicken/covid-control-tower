@@ -1,16 +1,20 @@
 package com.dev.covid.controller;
 
 import com.dev.covid.DTO.DangerDTO;
+import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.Danger;
 import com.dev.covid.model.HospitalRoom;
 import com.dev.covid.model.InfectionTracking;
 import com.dev.covid.service.DangerService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("danger")
 public class DangerController {
@@ -19,70 +23,69 @@ public class DangerController {
     private DangerService dangerService;
 
     @GetMapping
-    public List<DangerDTO> findAll() {
-        List<Danger> dangerList = dangerService.findAll();
-        List<DangerDTO> dangerDTOList = new ArrayList<>();
-        for (Danger danger : dangerList) {
-            dangerDTOList.add(DangerDTO
-                    .builder()
-                    .dangerId(danger.getDangerId())
-                    .dangerCareDate(danger.getDangerCareDate())
-                    .dangerCareRelease(danger.getDangerCareRelease())
-                    .hospitalRoomnumber(danger.getHospitalRoomnumber())
-                    .patientId(danger.getPatient().getPeopleId())
-                    .build()
-            );
+    public ResponseEntity<?> findAll() {
+        try{
+            List<Danger> dangerList = dangerService.findAll();
+            List<DangerDTO> dangerDTOList = new ArrayList<>();
+            for (Danger danger : dangerList) {
+                dangerDTOList.add(
+                        dangerService.dangerDTO(danger)
+                );
+            }
+            return ResponseEntity.ok(dangerDTOList);
+        }catch (Exception e){
+            log.error("고위험군 환자 정보 조회에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return dangerDTOList;
     }
 
     @PostMapping
-    public DangerDTO save(@RequestBody DangerDTO dangerDTO) {
-        Danger newDanger = dangerService.save(dangerDTO);
-        DangerDTO newDangerDTO = DangerDTO
-                .builder()
-                .patientId(newDanger.getPatient().getPeopleId())
-                .dangerId(newDanger.getDangerId())
-                .dangerCareDate(newDanger.getDangerCareRelease())
-                .dangerCareRelease(newDanger.getDangerCareRelease())
-                .hospitalRoomnumber(newDanger.getHospitalRoomnumber())
-                .build();
-        return newDangerDTO;
+    public ResponseEntity<?> save(@RequestBody DangerDTO dangerDTO) {
+        try{
+            Danger danger = dangerService.save(dangerDTO);
+            DangerDTO newDangerDTO = dangerService.dangerDTO(danger);
+            return ResponseEntity.ok(newDangerDTO);
+        }catch (Exception e){
+            log.error("고위험군 환자 정보 등록에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @PutMapping
-    public List<DangerDTO> update(@RequestBody Danger updateDanger) {
-        List<Danger> dangerList = dangerService.update(updateDanger);
-        List<DangerDTO> dangerDTOList = new ArrayList<>();
-        for (Danger danger : dangerList) {
-            dangerDTOList.add(DangerDTO
-                    .builder()
-                    .dangerId(danger.getDangerId())
-                    .dangerCareDate(danger.getDangerCareDate())
-                    .dangerCareRelease(danger.getDangerCareRelease())
-                    .hospitalRoomnumber(danger.getHospitalRoomnumber())
-                    .patientId(danger.getPatient().getPeopleId())
-                    .build()
-            );
+    public ResponseEntity<?> update(@RequestBody Danger updateDanger) {
+        try{
+            List<Danger> dangerList = dangerService.update(updateDanger);
+            List<DangerDTO> dangerDTOList = new ArrayList<>();
+            for (Danger danger : dangerList) {
+                dangerDTOList.add(
+                        dangerService.dangerDTO(danger)
+                );
+            }
+            return ResponseEntity.ok(dangerDTOList);
+        }catch (Exception e){
+            log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return dangerDTOList;
     }
 
     @DeleteMapping("/{id}")
-    public List<DangerDTO> delete(@PathVariable("id") Long id) {
-        List<Danger> dangerList = dangerService.delete(id);
-        List<DangerDTO> dangerDTOList = new ArrayList<>();
-        for (Danger danger : dangerList) {
-            dangerDTOList.add(DangerDTO
-                    .builder()
-                    .dangerId(danger.getDangerId())
-                    .dangerCareDate(danger.getDangerCareDate())
-                    .dangerCareRelease(danger.getDangerCareRelease())
-                    .hospitalRoomnumber(danger.getHospitalRoomnumber())
-                    .patientId(danger.getPatient().getPeopleId())
-                    .build()
-            );
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        try {
+            List<Danger> dangerList = dangerService.delete(id);
+            List<DangerDTO> dangerDTOList = new ArrayList<>();
+            for (Danger danger : dangerList) {
+                dangerDTOList.add(
+                        dangerService.dangerDTO(danger)
+                );
+            }
+            return ResponseEntity.ok(dangerDTOList);
+        }catch (Exception e){
+            log.error("고위험군 환자 정보 삭제에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return dangerDTOList;
     }
 }

@@ -41,7 +41,6 @@ public class DangerService {
 
     public List<Danger> update(Danger danger) {
         final Optional<Danger> findDanger = repository.findById(danger.getDangerId());
-
         findDanger.ifPresent(newDanger -> {
             newDanger.setDangerCareDate(danger.getDangerCareDate());
             newDanger.setDangerCareRelease(danger.getDangerCareRelease());
@@ -64,4 +63,14 @@ public class DangerService {
         return repository.findAll();
     }
 
+    public DangerDTO dangerDTO(Danger danger){
+        return DangerDTO
+                .builder()
+                .dangerId(danger.getDangerId())
+                .dangerCareDate(danger.getDangerCareDate())
+                .dangerCareRelease(danger.getDangerCareRelease())
+                .hospitalRoomnumber(danger.getHospitalRoomnumber())
+                .patientId(danger.getPatient().getPeopleId())
+                .build();
+    }
 }
