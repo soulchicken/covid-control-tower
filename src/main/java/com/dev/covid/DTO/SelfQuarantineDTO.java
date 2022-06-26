@@ -17,14 +17,4 @@ public class SelfQuarantineDTO {
     private LocalDate selfQuarantineDate;
     private LocalDate selfQuarantineRelease;
 
-    public static SelfQuarantineDTO selfQuarantineToDTO(SelfQuarantine selfQuarantine){
-        return SelfQuarantineDTO
-                .builder()
-                .patientName(selfQuarantine.getPatient().getPeopleName())
-                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                .build();
-    }
-
 }

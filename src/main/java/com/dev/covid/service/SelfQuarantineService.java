@@ -4,10 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.dev.covid.DTO.SelfQuarantineDTO;
 import com.dev.covid.model.Patient;
@@ -92,4 +89,21 @@ public class SelfQuarantineService {
 		return selfQuarantineRepository.findByselfQuarantineName(name);
 	}
 
+	public SelfQuarantineDTO selfQuarantineToDTO(SelfQuarantine selfQuarantine){
+		return SelfQuarantineDTO
+				.builder()
+				.patientName(selfQuarantine.getPatient().getPeopleName())
+				.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+				.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+				.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+				.build();
+	}
+
+	public List<SelfQuarantineDTO> selfQuarantineListToDTOList(List<SelfQuarantine> selfQuarantineList){
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList) {
+			selfQuarantineDTOList.add(selfQuarantineToDTO(selfQuarantine));
+		}
+		return selfQuarantineDTOList;
+	}
 }
