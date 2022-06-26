@@ -1,5 +1,6 @@
 package com.dev.covid.DTO;
 
+import com.dev.covid.model.SelfQuarantine;
 import lombok.AllArgsConstructor;
 
 import java.time.LocalDate;
@@ -15,4 +16,5 @@ public class SelfQuarantineDTO {
     private Long selfQuarantineId;
     private LocalDate selfQuarantineDate;
     private LocalDate selfQuarantineRelease;
+
 }

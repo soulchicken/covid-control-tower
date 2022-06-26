@@ -1,8 +1,10 @@
 package com.dev.covid.service;
 
 import com.dev.covid.DTO.PatientDTO;
+import com.dev.covid.model.Hospital;
 import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
+import com.dev.covid.repository.HospitalRepository;
 import com.dev.covid.repository.ManagerRepository;
 import com.dev.covid.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,22 +19,27 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     @Autowired
+    private HospitalRepository hospitalRepository;
+
+    @Autowired
     private ManagerRepository managerRepository;
 
+    @Autowired
+    private HospitalRepository hospitalRepository;
 
     public Patient save(PatientDTO patientDTO) throws Exception {
-        Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
-        Patient patient = new Patient();
-        foundManager.ifPresent(manager -> {
-            patient.setManager(manager);
-                }
-        );
 
+        Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
+        Hospital hospital = hospitalRepository.findById(patientDTO.getHospitalId()).orElseThrow(Exception::new);
+
+        Patient patient = new Patient();
+        patient.setManager(manager);
         patient.setPeoplePhone(patientDTO.getPeoplePhone());
         patient.setPeopleHome(patientDTO.getPeopleHome());
         patient.setPeopleGender(patientDTO.getPeopleGender());
         patient.setPeopleName(patientDTO.getPeopleName());
         patient.setPeopleAge(patientDTO.getPeopleAge());
+        patient.setHospital(hospital);
         return patientRepository.save(patient);
     }
 

@@ -1,6 +1,5 @@
 package com.dev.covid.service;
 
-
 import com.dev.covid.DTO.InfectionTrackingDTO;
 import com.dev.covid.model.InfectionTracking;
 import com.dev.covid.model.Patient;
@@ -11,55 +10,82 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Slf4j
 @Service
 public class InfectionTrackingService {
 
     @Autowired
-    private InfectionTrackingRepository repository;
+    private InfectionTrackingRepository infectionTrackingRepository;
 
     @Autowired
     private PatientRepository patientRepository;
 
     public List<InfectionTracking> findAll() {
-        return repository.findAll();
+        return infectionTrackingRepository.findAll();
     }
 
     public InfectionTracking save(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
-            Patient patient = patientRepository.findById(infectionTrackingDTO.getPatientPeopleId()).get();
-            InfectionTracking infectionTracking = InfectionTracking
-                    .builder()
-                    .infectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea())
-                    .infectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause())
-                    .infectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate())
-                    .infectionTrackingId(infectionTrackingDTO.getInfectionTrackingId())
-                    .infectionTrackingName(infectionTrackingDTO.getInfectionTrackingName())
-                    .patient(patient)
-                    .build();
-            return repository.save(infectionTracking);
+            Patient patient = patientRepository.findById(infectionTrackingDTO.getPatientPeopleId()).orElseThrow(Exception::new);
+            InfectionTracking infectionTracking =  makeInfectionTracking(patient, infectionTrackingDTO);
+            return infectionTrackingRepository.save(infectionTracking);
     }
 
-    public List<InfectionTracking> update(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
-            final InfectionTracking findInfectionTracking = repository.findById(infectionTrackingDTO.getInfectionTrackingId()).get();
+    public InfectionTracking update(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
+            final InfectionTracking findInfectionTracking = infectionTrackingRepository.findById(infectionTrackingDTO.getInfectionTrackingId()).orElseThrow(Exception::new);
 
             findInfectionTracking.setInfectionTrackingName(infectionTrackingDTO.getInfectionTrackingName());
             findInfectionTracking.setInfectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea());
             findInfectionTracking.setInfectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate());
             findInfectionTracking.setInfectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause());
 
-            repository.save(findInfectionTracking);
-            return repository.findAll();
+            return infectionTrackingRepository.save(findInfectionTracking);
     }
 
-    public List<InfectionTracking> delete(Long id) {
+    public List<InfectionTracking> delete(Long id) throws Exception{
 
-        InfectionTracking findInfectionTracking = repository.findById(id).get();
-        repository.delete(findInfectionTracking);
-        return repository.findAll();
+        InfectionTracking findInfectionTracking = infectionTrackingRepository.findById(id).orElseThrow(Exception::new);
+        infectionTrackingRepository.delete(findInfectionTracking);
+        return infectionTrackingRepository.findAll();
 
     }
 
+    public InfectionTrackingDTO makeInfectionTrackingDTO(InfectionTracking infectionTracking){
+
+        return InfectionTrackingDTO
+                .builder()
+                .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
+                .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
+                .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
+                .infectionTrackingId(infectionTracking.getInfectionTrackingId())
+                .infectionTrackingName(infectionTracking.getInfectionTrackingName())
+                .patientPeopleId(infectionTracking.getPatient().getPeopleId())
+                .build();
+    }
+
+    public List<InfectionTrackingDTO> makeInfectionTrackingDTOList(List<InfectionTracking> infectionTrackingList){
+
+        List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
+        for (InfectionTracking infectionTracking : infectionTrackingList){
+            infectionTrackingDTOList.add(
+                    makeInfectionTrackingDTO(infectionTracking)
+            );
+        }
+        return infectionTrackingDTOList;
+    }
+
+    public InfectionTracking makeInfectionTracking(Patient patient, InfectionTrackingDTO infectionTrackingDTO){
+
+        return InfectionTracking
+                .builder()
+                .infectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea())
+                .infectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause())
+                .infectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate())
+                .infectionTrackingId(infectionTrackingDTO.getInfectionTrackingId())
+                .infectionTrackingName(infectionTrackingDTO.getInfectionTrackingName())
+                .patient(patient)
+                .build();
+    }
 }
