@@ -1,21 +1,12 @@
 package com.dev.covid.model;
 
-import static org.junit.jupiter.api.Assertions.*;
+import com.dev.covid.common.BaseControllerTest;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.DisplayName;
 
-import java.text.SimpleDateFormat;
-
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.EntityTransaction;
-import javax.persistence.Persistence;
-
-
-import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.web.bind.annotation.RestController;
-
-
-@RestController
-public class SelfQuarantineTest {
+@Slf4j
+@DisplayName("자가격리자 테스트")
+public class SelfQuarantineTest extends BaseControllerTest {
 
 }
 
