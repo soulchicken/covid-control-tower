@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "hospitalroom")
 public class HospitalRoom {
+    
     @Id
     @Column(name = "hospitalroom_roomnumber")
     private Long hospitalroomRoomnumber;
