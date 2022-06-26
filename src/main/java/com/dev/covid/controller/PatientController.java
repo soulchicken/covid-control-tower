@@ -7,7 +7,7 @@ import com.dev.covid.DTO.SelfQuarantineDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.model.Patient;
 import com.dev.covid.model.SelfQuarantine;
-import com.dev.covid.service.Service;
+import com.dev.covid.service.PatientService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +21,13 @@ import java.util.List;
 @RequestMapping("api/patient")
 public class PatientController {
     @Autowired
-    private Service service;
+    private PatientService patientService;
     /**
      * 전체 환자를 조회를 한다.
      */
     @GetMapping
     public ResponseEntity<?> findAll() {
-        List<Patient> patientList = service.findAll();
+        List<Patient> patientList = patientService.findAll();
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
@@ -67,7 +67,7 @@ public class PatientController {
 
     @GetMapping("/id/{patientId}")
     public PatientDTO findById(@PathVariable("patientId") Long id) {
-        Patient newPatient = service.findById(id);
+        Patient newPatient = patientService.findById(id);
 
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
@@ -113,7 +113,7 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody PatientDTO newPatientDTO) {
         try{
-        Patient newPatient = service.save(newPatientDTO);
+        Patient newPatient = patientService.save(newPatientDTO);
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
             PatientDTO patientDTO = PatientDTO
@@ -168,7 +168,7 @@ public class PatientController {
     @PutMapping
     public PatientDTO update(@RequestBody Patient patient) {
 
-        Patient newPatient = service.update(patient);
+        Patient newPatient = patientService.update(patient);
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
             PatientDTO patientDTO = PatientDTO
@@ -211,7 +211,7 @@ public class PatientController {
     @DeleteMapping("/{patientId}")
     public ResponseEntity<?> delete(@PathVariable("patientId") Long id) {
         try {
-            List<Patient> patientList = service.delete(id);
+            List<Patient> patientList = patientService.delete(id);
             List<PatientDTO> patientDTOList = new ArrayList<>();
             for (Patient patient : patientList) {
                 SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
