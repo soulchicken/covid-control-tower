@@ -1,10 +1,12 @@
 package com.dev.covid.controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.DTO.SelfQuarantineDTO;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,151 +20,117 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.covid.model.SelfQuarantine;
 import com.dev.covid.service.SelfQuarantineService;
 
+@Slf4j
 @RestController
 @RequestMapping("selfquarantine")
 public class SelfQuarantineController {
 
     @Autowired
-    private SelfQuarantineService service;
+    private SelfQuarantineService selfQuarantineService;
 
     @GetMapping
-    public List<SelfQuarantineDTO> findAll() {
-        List<SelfQuarantine> selfQuarantineList = service.findAll();
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(SelfQuarantineDTO
-                    .builder()
-                    .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                    .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                    .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                    .patientName(selfQuarantine.getPatient().getPeopleName())
-                    .build()
-            );
+    public ResponseEntity<?> findAll() {
+        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.findAll();
+        if (selfQuarantineList.size() == 0){
+            log.error("자가격리자가 없습니다.");
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 이름이 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
+        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+        return ResponseEntity.ok(selfQuarantineDTOList);
     }
 
     @GetMapping("/{id}")
-    public SelfQuarantineDTO findById(@PathVariable("id") Long id) {
-
-        SelfQuarantine selfQuarantine = service.findById(id);
-
-        SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
-                .builder()
-                .patientName(selfQuarantine.getPatient().getPeopleName())
-                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                .build();
-        return selfQuarantineDTO;
+    public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+        try {
+            SelfQuarantine selfQuarantine = selfQuarantineService.findById(id);
+            SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
+            return ResponseEntity.ok(selfQuarantineDTO);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 id가 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @GetMapping("/name/{name}")
-    public List<SelfQuarantineDTO> findByselfQuarantineName(@PathVariable("name") String name) {
-        List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineName(name);
+    public ResponseEntity<?> findByselfQuarantineName(@PathVariable("name") String name) {
+        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.findByselfQuarantineName(name);
 
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(
-                    SelfQuarantineDTO
-                            .builder()
-                            .patientName(selfQuarantine.getPatient().getPeopleName())
-                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                            .build()
-            );
+        if (selfQuarantineList.size() == 0){
+            log.error("해당되는 이름이 없습니다.");
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 이름이 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
+
+        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+        return ResponseEntity.ok(selfQuarantineDTOList);
     }
 
     @GetMapping("date")
-    public List<SelfQuarantineDTO> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+    public ResponseEntity<?> findByselfQuarantineDateBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
 
-        List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineDateBetween(start, end);
+        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.findByselfQuarantineDateBetween(start, end);
 
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(
-                    SelfQuarantineDTO
-                            .builder()
-                            .patientName(selfQuarantine.getPatient().getPeopleName())
-                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                            .build()
-            );
+        if (selfQuarantineList.size() == 0){
+            log.error("해당 날짜에 대한 기록이 없습니다.");
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당 날짜에 대한 기록이 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
+
+        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+        return ResponseEntity.ok(selfQuarantineDTOList);
     }
 
     @GetMapping("release")
-    public List<SelfQuarantineDTO> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
-        List<SelfQuarantine> selfQuarantineList = service.findByselfQuarantineReleaseBetween(start, end);
+    public ResponseEntity<?> findByselfQuarantineReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end) {
+        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.findByselfQuarantineReleaseBetween(start, end);
 
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(
-                    SelfQuarantineDTO
-                            .builder()
-                            .patientName(selfQuarantine.getPatient().getPeopleName())
-                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                            .build()
-            );
+        if (selfQuarantineList.size() == 0){
+            log.error("해당 날짜에 대한 기록이 없습니다.");
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당 날짜에 대한 기록이 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
+        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+        return ResponseEntity.ok(selfQuarantineDTOList);
     }
 
     @PostMapping
-    public SelfQuarantineDTO save(@RequestBody SelfQuarantineDTO selfQuarantineDTO) {
-        SelfQuarantine newSelfQuarantine = service.save(selfQuarantineDTO);
-        SelfQuarantineDTO newSelfQuarantineDTO = SelfQuarantineDTO
-                .builder()
-                .patientName(newSelfQuarantine.getPatient().getPeopleName())
-                .selfQuarantineDate(newSelfQuarantine.getSelfQuarantineDate())
-                .selfQuarantineRelease(newSelfQuarantine.getSelfQuarantineRelease())
-                .selfQuarantineId(newSelfQuarantine.getSelfQuarantineId())
-                .build();
-        return newSelfQuarantineDTO;
+    public ResponseEntity<?> save(@RequestBody SelfQuarantineDTO selfQuarantineDTO) {
+        try{
+            SelfQuarantine newSelfQuarantine = selfQuarantineService.save(selfQuarantineDTO);
+            SelfQuarantineDTO newSelfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(newSelfQuarantine);
+            return ResponseEntity.ok(newSelfQuarantineDTO);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @PutMapping
-    public List<SelfQuarantineDTO> put(@RequestBody SelfQuarantine putSelfQuarantine) {
-        List<SelfQuarantine> selfQuarantineList = service.put(putSelfQuarantine);
-
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(
-                    SelfQuarantineDTO
-                            .builder()
-                            .patientName(selfQuarantine.getPatient().getPeopleName())
-                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                            .build()
-            );
+    public ResponseEntity<?> put(@RequestBody SelfQuarantine putSelfQuarantine) {
+        try {
+            SelfQuarantine selfQuarantine = selfQuarantineService.put(putSelfQuarantine);
+            SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
+            return ResponseEntity.ok(selfQuarantineDTO);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
     }
 
     @DeleteMapping("/{id}")
-    public List<SelfQuarantineDTO> delete(@PathVariable("id") Long id) {
-        List<SelfQuarantine> selfQuarantineList = service.delete(id);
-        List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
-        for (SelfQuarantine selfQuarantine : selfQuarantineList) {
-            selfQuarantineDTOList.add(
-                    SelfQuarantineDTO
-                            .builder()
-                            .patientName(selfQuarantine.getPatient().getPeopleName())
-                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                            .build()
-            );
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        try {
+            List<SelfQuarantine> selfQuarantineList = selfQuarantineService.delete(id);
+            List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+            return ResponseEntity.ok(selfQuarantineDTOList);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return selfQuarantineDTOList;
     }
-
+    
 }

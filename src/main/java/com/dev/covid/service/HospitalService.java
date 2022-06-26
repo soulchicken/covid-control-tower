@@ -19,7 +19,9 @@ public class HospitalService {
     private HospitalRoomRepository hospitalRoomRepository;
 
     public List<Hospital> findAll() {
+
         return hospitalRepository.findAll();
+
     }
 
     public Hospital save(HospitalDTO hospitalDTO) throws Exception {
@@ -27,6 +29,7 @@ public class HospitalService {
         Hospital hospital = makeHospital(hospitalDTO);
         return hospitalRepository.save(hospital);
     }
+
 
     public Hospital update(HospitalDTO hospitalDTO) throws Exception {
         Hospital findHospital = hospitalRepository.findById(hospitalDTO.getHospitalId()).orElseThrow(Exception::new);

@@ -46,12 +46,14 @@ public class HospitalController {
             );
         }
         return ResponseEntity.ok(hospitalDTOList);
+
     }
 
     // 삽입
     @PostMapping
     public ResponseEntity<?> save(@RequestBody HospitalDTO hospitalDTO) {
         try {
+
             Hospital newHospital = hospitalService.save(hospitalDTO);
             HospitalDTO newHospitalDTO = hospitalService.hospitalDTO(newHospital);
             return ResponseEntity.ok(newHospitalDTO);
@@ -64,6 +66,7 @@ public class HospitalController {
 
     // 수정
     @PutMapping
+
 
     public ResponseEntity<?> update(@RequestBody HospitalDTO updatehospital) {
         try {
@@ -81,20 +84,24 @@ public class HospitalController {
         }
 
 
+
     }
 
     // 삭제
     @DeleteMapping("/{id}")
 
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+
         try {
     
             Hospital newHospital = hospitalService.delete(id);
+
 
             List<Long> hospitalRoomNumberList = new ArrayList<>();
             for (HospitalRoom hospitalRoom : newHospital.getHospitalRoomList()) {
                 hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
             }
+
             HospitalDTO hospitalDTO = hospitalService.hospitalDTO(newHospital);
             return ResponseEntity.ok(hospitalDTO);
         } catch (Exception e) {
@@ -102,5 +109,6 @@ public class HospitalController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
+
     }
 }
