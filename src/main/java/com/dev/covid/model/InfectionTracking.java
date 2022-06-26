@@ -34,4 +34,5 @@ public class InfectionTracking {
     @JoinColumn(name = "people_id")
     private Patient patient;
 
+
 }

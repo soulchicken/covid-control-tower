@@ -19,6 +19,7 @@ public class PatientDTO {
     private String peopleHome;
     private String peoplePhone;
     private SelfQuarantineDTO selfQuarantineDTO;
+    private Long hospitalId;
     private Long managerId;
     private List<InfectionTrackingDTO> infectionTrackingDTOList;
 }

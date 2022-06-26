@@ -24,17 +24,17 @@ import java.util.List;
 @ToString
 @Entity
 public class Manager {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column(name = "manager_id", nullable = false)
-	private Long managerId;
-	
-	@Column(name = "manager_name")
-	private String managerName;
-	
-	@Column(name = "manager_phone")
-	private String managerPhone;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "manager_id", nullable = false)
+    private Long managerId;
 
-	@OneToMany(fetch = FetchType.EAGER, mappedBy = "manager")
-	private List<Patient> patientList;
+    @Column(name = "manager_name")
+    private String managerName;
+
+    @Column(name = "manager_phone")
+    private String managerPhone;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "manager")
+    private List<Patient> patientList;
 }
