@@ -29,9 +29,6 @@ public class Hospital {
     @Column(name = "hospital_name")
     private String hospitalName;
 
-    @Column(name = "hospital_room")
-    private int hospitalRoom;
-
     @Column(name = "hospital_patientnum")
     private int hospitalPatientnum;
 
