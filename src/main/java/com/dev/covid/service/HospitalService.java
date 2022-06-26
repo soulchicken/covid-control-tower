@@ -23,6 +23,7 @@ public class HospitalService {
     }
 
     public Hospital save(HospitalDTO hospitalDTO) throws Exception {
+
         Hospital hospital = makeHospital(hospitalDTO);
         return hospitalRepository.save(hospital);
     }

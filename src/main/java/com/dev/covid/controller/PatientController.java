@@ -1,10 +1,8 @@
 package com.dev.covid.controller;
 
-import com.dev.covid.DTO.HospitalDTO;
-import com.dev.covid.DTO.PatientDTO;
-import com.dev.covid.DTO.ResponseDTO;
-import com.dev.covid.DTO.SelfQuarantineDTO;
+import com.dev.covid.DTO.*;
 import com.dev.covid.model.Hospital;
+import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
 import com.dev.covid.model.SelfQuarantine;
 import com.dev.covid.service.PatientService;
@@ -32,11 +30,14 @@ public class PatientController {
         for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
             Hospital hospital = patient.getHospital();
+            Manager manager = patient.getManager();
+            ManagerDTO managerDTO;
             HospitalDTO hospitalDTO;
             SelfQuarantineDTO selfQuarantineDTO;
             if (selfQuarantine == null || hospital == null) {
                 selfQuarantineDTO = null;
                 hospitalDTO = null;
+                managerDTO = null;
             } else {
                 selfQuarantineDTO = SelfQuarantineDTO
                         .builder()
@@ -113,47 +114,47 @@ public class PatientController {
     @PostMapping
     public ResponseEntity<?> save(@RequestBody PatientDTO newPatientDTO) {
         try{
-        Patient newPatient = patientService.save(newPatientDTO);
-        SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
-        if (selfQuarantine == null) {
+            Patient newPatient = patientService.save(newPatientDTO);
+            SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
+            if (selfQuarantine == null) {
+                PatientDTO patientDTO = PatientDTO
+                        .builder()
+                        .peopleAge(newPatient.getPeopleAge())
+                        .managerId(newPatient.getManager().getManagerId())
+                        .peopleGender(newPatient.getPeopleGender())
+                        .peopleHome(newPatient.getPeopleHome())
+                        .peopleId(newPatient.getPeopleId())
+                        .peopleName(newPatient.getPeopleName())
+                        .managerId(newPatient.getManager().getManagerId())
+                        .peoplePhone(newPatient.getPeoplePhone())
+                        .hospitalId(newPatient.getHospital().getHospitalId())
+                        .build();
+                return ResponseEntity.ok(patientDTO);
+
+            }
+
+            SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
+                    .builder()
+                    .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                    .patientName(newPatient.getPeopleName())
+                    .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                    .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                    .build();
+
             PatientDTO patientDTO = PatientDTO
                     .builder()
                     .peopleAge(newPatient.getPeopleAge())
-                    .managerId(newPatient.getManager().getManagerId())
                     .peopleGender(newPatient.getPeopleGender())
                     .peopleHome(newPatient.getPeopleHome())
                     .peopleId(newPatient.getPeopleId())
-                    .peopleName(newPatient.getPeopleName())
                     .managerId(newPatient.getManager().getManagerId())
+                    .peopleName(newPatient.getPeopleName())
                     .peoplePhone(newPatient.getPeoplePhone())
+                    .selfQuarantineDTO(selfQuarantineDTO)
                     .hospitalId(newPatient.getHospital().getHospitalId())
                     .build();
             return ResponseEntity.ok(patientDTO);
-
-        }
-
-        SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
-                .builder()
-                .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                .patientName(newPatient.getPeopleName())
-                .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                .build();
-
-        PatientDTO patientDTO = PatientDTO
-                .builder()
-                .peopleAge(newPatient.getPeopleAge())
-                .peopleGender(newPatient.getPeopleGender())
-                .peopleHome(newPatient.getPeopleHome())
-                .peopleId(newPatient.getPeopleId())
-                .managerId(newPatient.getManager().getManagerId())
-                .peopleName(newPatient.getPeopleName())
-                .peoplePhone(newPatient.getPeoplePhone())
-                .selfQuarantineDTO(selfQuarantineDTO)
-                .hospitalId(newPatient.getHospital().getHospitalId())
-                .build();
-        return ResponseEntity.ok(patientDTO);
-    } catch (Exception e) {
+        } catch (Exception e) {
             log.error("Not found Patient ID {}" + e.getMessage(), newPatientDTO.getPeopleId());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);

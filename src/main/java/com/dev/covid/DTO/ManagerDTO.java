@@ -1,5 +1,6 @@
 package com.dev.covid.DTO;
 
+import com.dev.covid.model.Patient;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

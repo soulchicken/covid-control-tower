@@ -88,7 +88,9 @@ public class HospitalController {
 
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
+    
             Hospital newHospital = hospitalService.delete(id);
+
             List<Long> hospitalRoomNumberList = new ArrayList<>();
             for (HospitalRoom hospitalRoom : newHospital.getHospitalRoomList()) {
                 hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
@@ -100,6 +102,5 @@ public class HospitalController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 }
