@@ -17,7 +17,7 @@ import com.dev.covid.repository.SelfQuarantineRepository;
 
 @Service
 public class SelfQuarantineService {
-	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
 	@Autowired
 	private SelfQuarantineRepository selfQuarantineRepository;
 
@@ -28,35 +28,39 @@ public class SelfQuarantineService {
 		return selfQuarantineRepository.findAll();
 	}
 
-	public SelfQuarantine save(SelfQuarantineDTO selfQuarantineDTO) {
+	public SelfQuarantine save(SelfQuarantineDTO selfQuarantineDTO) throws Exception{
 		Patient patient = patientRepository.findByPeopleName(selfQuarantineDTO.getPatientName());
-		SelfQuarantine newSelfQuarantine = SelfQuarantine
-				.builder()
-				.selfQuarantineDate(selfQuarantineDTO.getSelfQuarantineDate())
-				.selfQuarantineRelease(selfQuarantineDTO.getSelfQuarantineRelease())
-				.selfQuarantineName(patient.getPeopleName())
-				.patient(patient)
-				.build();
+		if (patient == null){
+			throw new Exception("일치하는 환자 이름이 없습니다.");
+		}
+		SelfQuarantine newSelfQuarantine = makeSelfQuarantine(patient, selfQuarantineDTO);
 		SelfQuarantine madenSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
 		patient.setSelfQuarantine(madenSelfQuarantine);
 		patientRepository.save(patient);
 		return madenSelfQuarantine;
 	}
 
-	public List<SelfQuarantine> delete(Long id) {
-		final Optional<SelfQuarantine> foundSelfQuarantine = selfQuarantineRepository.findById(id);
-		foundSelfQuarantine.ifPresent(selfQuarantine -> selfQuarantineRepository.delete(selfQuarantine));
-		return selfQuarantineRepository.findAll();
+	public List<SelfQuarantine> delete(Long id) throws Exception {
+		try {
+			SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(id).get();
+			selfQuarantineRepository.delete(foundSelfQuarantine);
+			return selfQuarantineRepository.findAll();
+		} catch (Exception e) {
+			throw new Exception("환자 정보가 없다는");
+		}
+
 	}
 
-	public List<SelfQuarantine> put(SelfQuarantine selfQuarantine) {
-		final Optional<SelfQuarantine> foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId());
-		foundSelfQuarantine.ifPresent(updateSelfQuarantine -> {
-			updateSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
-			updateSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
-			selfQuarantineRepository.save(updateSelfQuarantine);
-		});
-		return selfQuarantineRepository.findAll();
+	public SelfQuarantine put(SelfQuarantine selfQuarantine) throws Exception{
+		try {
+			SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId()).get();
+			foundSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
+			foundSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
+			return selfQuarantineRepository.save(foundSelfQuarantine);
+
+		} catch (Exception e) {
+			throw new Exception("환자 정보가 없다는");
+		}
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
@@ -105,5 +109,15 @@ public class SelfQuarantineService {
 			selfQuarantineDTOList.add(selfQuarantineToDTO(selfQuarantine));
 		}
 		return selfQuarantineDTOList;
+	}
+
+	public SelfQuarantine makeSelfQuarantine(Patient patient, SelfQuarantineDTO selfQuarantineDTO){
+		return SelfQuarantine
+				.builder()
+				.selfQuarantineDate(selfQuarantineDTO.getSelfQuarantineDate())
+				.selfQuarantineRelease(selfQuarantineDTO.getSelfQuarantineRelease())
+				.selfQuarantineName(patient.getPeopleName())
+				.patient(patient)
+				.build();
 	}
 }

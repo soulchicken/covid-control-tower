@@ -32,7 +32,7 @@ public class SelfQuarantineController {
     public ResponseEntity<?> findAll() {
         List<SelfQuarantine> selfQuarantineList = selfQuarantineService.findAll();
         if (selfQuarantineList.size() == 0){
-            log.error("해당되는 이름이 없습니다.");
+            log.error("자가격리자가 없습니다.");
             ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 이름이 없습니다.").build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
@@ -44,7 +44,6 @@ public class SelfQuarantineController {
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
 
         SelfQuarantine selfQuarantine = selfQuarantineService.findById(id);
-
         SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
         return ResponseEntity.ok(selfQuarantineDTO);
     }
@@ -93,23 +92,43 @@ public class SelfQuarantineController {
 
     @PostMapping
     public ResponseEntity<?> save(@RequestBody SelfQuarantineDTO selfQuarantineDTO) {
-        SelfQuarantine newSelfQuarantine = selfQuarantineService.save(selfQuarantineDTO);
-        SelfQuarantineDTO newSelfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(newSelfQuarantine);
-        return ResponseEntity.ok(newSelfQuarantineDTO);
+        try{
+            SelfQuarantine newSelfQuarantine = selfQuarantineService.save(selfQuarantineDTO);
+            SelfQuarantineDTO newSelfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(newSelfQuarantine);
+            return ResponseEntity.ok(newSelfQuarantineDTO);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
+
     }
 
     @PutMapping
     public ResponseEntity<?> put(@RequestBody SelfQuarantine putSelfQuarantine) {
-        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.put(putSelfQuarantine);
+        try {
+            SelfQuarantine selfQuarantine = selfQuarantineService.put(putSelfQuarantine);
+            SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
+            return ResponseEntity.ok(selfQuarantineDTO);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
 
-        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
-        return ResponseEntity.ok(selfQuarantineDTOList);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        List<SelfQuarantine> selfQuarantineList = selfQuarantineService.delete(id);
-        List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
-        return ResponseEntity.ok(selfQuarantineDTOList);
+        try {
+            List<SelfQuarantine> selfQuarantineList = selfQuarantineService.delete(id);
+            List<SelfQuarantineDTO> selfQuarantineDTOList = selfQuarantineService.selfQuarantineListToDTOList(selfQuarantineList);
+            return ResponseEntity.ok(selfQuarantineDTOList);
+        } catch (Exception e) {
+            log.error("자가격리자 정보 입력에 실패했습니다. :" + e.getMessage());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
+
     }
 }
