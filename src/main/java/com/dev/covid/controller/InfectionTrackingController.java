@@ -23,20 +23,7 @@ public class InfectionTrackingController {
     @GetMapping
     public ResponseEntity<?> findAll() {
         List<InfectionTracking> infectionTrackingList = infectionTrackingService.findAll();
-        List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
-        for (InfectionTracking infectionTracking : infectionTrackingList){
-            infectionTrackingDTOList.add(
-                    InfectionTrackingDTO
-                            .builder()
-                            .infectionTrackingId(infectionTracking.getInfectionTrackingId())
-                            .patientPeopleId(infectionTracking.getPatient().getPeopleId())
-                            .infectionTrackingName(infectionTracking.getInfectionTrackingName())
-                            .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
-                            .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
-                            .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
-                            .build()
-            );
-        }
+        List<InfectionTrackingDTO> infectionTrackingDTOList = infectionTrackingService.makeInfectionTrackingDTOList(infectionTrackingList);
         return ResponseEntity.ok(infectionTrackingDTOList);
     }
 
@@ -44,15 +31,7 @@ public class InfectionTrackingController {
     public ResponseEntity<?> save(@RequestBody InfectionTrackingDTO infectionTrackingDTO) {
         try {
             InfectionTracking infectionTracking = infectionTrackingService.save(infectionTrackingDTO);
-            InfectionTrackingDTO newInfectionTrackingDTO = InfectionTrackingDTO
-                    .builder()
-                    .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
-                    .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
-                    .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
-                    .infectionTrackingId(infectionTracking.getInfectionTrackingId())
-                    .infectionTrackingName(infectionTracking.getInfectionTrackingName())
-                    .patientPeopleId(infectionTracking.getPatient().getPeopleId())
-                    .build();
+            InfectionTrackingDTO newInfectionTrackingDTO = infectionTrackingService.makeInfectionTrackingDTO(infectionTracking);
             return ResponseEntity.ok(newInfectionTrackingDTO);
         } catch (Exception e) {
             log.error("Not found Patient ID {} " + e.getMessage(), infectionTrackingDTO.getPatientPeopleId());
@@ -65,22 +44,10 @@ public class InfectionTrackingController {
     @PutMapping
     public ResponseEntity<?> update(@RequestBody InfectionTrackingDTO infectionTrackingDTO) {
         try {
-            List<InfectionTracking> infectionTrackingList = infectionTrackingService.update(infectionTrackingDTO);
-            List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
-            for (InfectionTracking oneInfectionTracking : infectionTrackingList){
-                infectionTrackingDTOList.add(
-                        InfectionTrackingDTO
-                                .builder()
-                                .infectionTrackingId(oneInfectionTracking.getInfectionTrackingId())
-                                .patientPeopleId(oneInfectionTracking.getPatient().getPeopleId())
-                                .infectionTrackingName(oneInfectionTracking.getInfectionTrackingName())
-                                .infectionTrackingDate(oneInfectionTracking.getInfectionTrackingDate())
-                                .infectionTrackingCause(oneInfectionTracking.getInfectionTrackingCause())
-                                .infectionTrackingArea(oneInfectionTracking.getInfectionTrackingArea())
-                                .build()
-                );
-            }
-            return ResponseEntity.ok(infectionTrackingDTOList);
+            InfectionTracking infectionTracking = infectionTrackingService.update(infectionTrackingDTO);
+            InfectionTrackingDTO newInfectionTrackingDTO = infectionTrackingService.makeInfectionTrackingDTO(infectionTracking);
+            return ResponseEntity.ok(newInfectionTrackingDTO);
+
         } catch (Exception e){
             log.error("Not found infectionTracking ID {} " + e.getMessage(), infectionTrackingDTO.getInfectionTrackingId());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -92,20 +59,7 @@ public class InfectionTrackingController {
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
             List<InfectionTracking> infectionTrackingList = infectionTrackingService.delete(id);
-            List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
-            for (InfectionTracking infectionTracking : infectionTrackingList){
-                infectionTrackingDTOList.add(
-                        InfectionTrackingDTO
-                                .builder()
-                                .infectionTrackingId(infectionTracking.getInfectionTrackingId())
-                                .patientPeopleId(infectionTracking.getPatient().getPeopleId())
-                                .infectionTrackingName(infectionTracking.getInfectionTrackingName())
-                                .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
-                                .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
-                                .infectionTrackingArea(infectionTracking.getInfectionTrackingArea())
-                                .build()
-                );
-            }
+            List<InfectionTrackingDTO> infectionTrackingDTOList = infectionTrackingService.makeInfectionTrackingDTOList(infectionTrackingList);
             return ResponseEntity.ok(infectionTrackingDTOList);
         } catch (Exception e){
             log.error("Not found Patient ID {} " + e.getMessage(), id);

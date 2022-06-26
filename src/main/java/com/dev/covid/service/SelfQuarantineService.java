@@ -34,10 +34,10 @@ public class SelfQuarantineService {
 			throw new Exception("일치하는 환자 이름이 없습니다.");
 		}
 		SelfQuarantine newSelfQuarantine = makeSelfQuarantine(patient, selfQuarantineDTO);
-		SelfQuarantine madenSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
-		patient.setSelfQuarantine(madenSelfQuarantine);
+		SelfQuarantine madeSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
+		patient.setSelfQuarantine(madeSelfQuarantine);
 		patientRepository.save(patient);
-		return madenSelfQuarantine;
+		return madeSelfQuarantine;
 	}
 
 	public List<SelfQuarantine> delete(Long id) throws Exception {
@@ -58,8 +58,6 @@ public class SelfQuarantineService {
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
 		LocalDate startDate = LocalDate.parse(start);
 		LocalDate endDate = LocalDate.parse(end);
-		System.out.println("스타트 데이트 "+start);
-		System.out.println("엔드 데이트 "+end);
 		return selfQuarantineRepository.findByselfQuarantineDateBetween(startDate,endDate);
 
 	}
@@ -71,14 +69,10 @@ public class SelfQuarantineService {
 
 	}
 
-	public SelfQuarantine findById(Long id) {
-		try {			
+	public SelfQuarantine findById(Long id) throws Exception {
+
 			SelfQuarantine selfQuarantine = selfQuarantineRepository.findById(id).orElseThrow(Exception::new);
 			return selfQuarantine;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineName(String name) {

@@ -30,7 +30,7 @@ public class InfectionTracking {
     @Column(name = "infectiontracking_cause")
     private String infectionTrackingCause;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Patient.class) // student와 major의 관계는 다대일 (N:1)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Patient.class)
     @JoinColumn(name = "people_id")
     private Patient patient;
 

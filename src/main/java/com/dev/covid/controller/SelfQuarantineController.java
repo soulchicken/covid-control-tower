@@ -42,10 +42,15 @@ public class SelfQuarantineController {
 
     @GetMapping("/{id}")
     public ResponseEntity<?> findById(@PathVariable("id") Long id) {
+        try {
+            SelfQuarantine selfQuarantine = selfQuarantineService.findById(id);
+            SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
+            return ResponseEntity.ok(selfQuarantineDTO);
+        } catch (Exception e) {
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 id가 없습니다.").build();
+            return  ResponseEntity.badRequest().body(responseDTO);
+        }
 
-        SelfQuarantine selfQuarantine = selfQuarantineService.findById(id);
-        SelfQuarantineDTO selfQuarantineDTO = selfQuarantineService.selfQuarantineToDTO(selfQuarantine);
-        return ResponseEntity.ok(selfQuarantineDTO);
     }
 
     @GetMapping("/name/{name}")
