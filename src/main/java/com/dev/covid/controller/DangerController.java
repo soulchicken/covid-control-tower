@@ -3,8 +3,6 @@ package com.dev.covid.controller;
 import com.dev.covid.DTO.DangerDTO;
 import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.Danger;
-import com.dev.covid.model.HospitalRoom;
-import com.dev.covid.model.InfectionTracking;
 import com.dev.covid.service.DangerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +38,25 @@ public class DangerController {
         }
     }
 
+    @GetMapping("/date")
+    public List<DangerDTO> findBydangerCareDateBetween(@RequestParam("start") String start, @RequestParam("end") String end){
+        List<Danger> dangerList = dangerService.findBydangerCareDateBetween(start, end);
+
+        List<DangerDTO> dangerDTOList = new ArrayList<>();
+        for(Danger danger : dangerList){
+            dangerDTOList.add(
+                    DangerDTO
+                            .builder()
+                            .patientId(danger.getPatient().getPeopleId())
+                            .dangerId(danger.getDangerId())
+                            .dangerCareDate(danger.getDangerCareDate())
+                            .dangerCareRelease(danger.getDangerCareRelease())
+                            .hospitalRoomnumber(danger.getHospitalRoomnumber())
+                            .build()
+            );
+        }
+        return dangerDTOList;
+    }
     @PostMapping
     public ResponseEntity<?> save(@RequestBody DangerDTO dangerDTO) {
         try{
@@ -85,4 +102,13 @@ public class DangerController {
             return  ResponseEntity.badRequest().body(responseDTO);
         }
     }
+
+    @GetMapping("/{id}")
+    public DangerDTO findById(@PathVariable("id") Long id){
+        Danger danger = dangerService.findById(id);
+
+        DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+        return dangerDTO;
+    }
+
 }

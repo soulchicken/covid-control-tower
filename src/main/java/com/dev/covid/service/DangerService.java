@@ -1,17 +1,15 @@
 package com.dev.covid.service;
 
 import com.dev.covid.DTO.DangerDTO;
-import com.dev.covid.DTO.PatientDTO;
 import com.dev.covid.model.Danger;
-import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
 import com.dev.covid.repository.DangerRepository;
 import com.dev.covid.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class DangerService {
@@ -63,5 +61,24 @@ public class DangerService {
                 .hospitalRoomnumber(danger.getHospitalRoomnumber())
                 .patientId(danger.getPatient().getPeopleId())
                 .build();
+    }
+
+    public List<Danger> findBydangerCareDateBetween(String start, String end){
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        System.out.println("스타트 데이트 "+start);
+        System.out.println("엔드 데이트 "+end);
+        return repository.findBydangerCareDateBetween(startDate,endDate);
+
+    }
+
+    public Danger findById(Long id){
+        try{
+            Danger danger = repository.findById(id).orElseThrow(Exception::new);
+            return danger;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
     }
 }
