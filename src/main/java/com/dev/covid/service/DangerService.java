@@ -72,6 +72,13 @@ public class DangerService {
 
     }
 
+    public List<Danger> findBydangerCareReleaseBetween(String start, String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        return repository.findBydangerCareReleaseBetween(startDate,endDate);
+
+    }
+
     public Danger findById(Long id){
         try{
             Danger danger = repository.findById(id).orElseThrow(Exception::new);

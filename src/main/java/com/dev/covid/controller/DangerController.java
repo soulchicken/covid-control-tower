@@ -45,18 +45,33 @@ public class DangerController {
         List<DangerDTO> dangerDTOList = new ArrayList<>();
         for(Danger danger : dangerList){
             dangerDTOList.add(
-                    DangerDTO
-                            .builder()
-                            .patientId(danger.getPatient().getPeopleId())
-                            .dangerId(danger.getDangerId())
-                            .dangerCareDate(danger.getDangerCareDate())
-                            .dangerCareRelease(danger.getDangerCareRelease())
-                            .hospitalRoomnumber(danger.getHospitalRoomnumber())
-                            .build()
+                    dangerService.dangerDTO(danger)
             );
         }
         return dangerDTOList;
     }
+
+    @GetMapping("/release")
+    public List<DangerDTO> findBydangerCareReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end){
+        List<Danger> dangerList = dangerService.findBydangerCareReleaseBetween(start, end);
+
+        List<DangerDTO> dangerDTOList = new ArrayList<>();
+        for(Danger danger : dangerList){
+            dangerDTOList.add(
+                   dangerService.dangerDTO(danger)
+            );
+        }
+        return dangerDTOList;
+    }
+
+    @GetMapping("/{id}")
+    public DangerDTO findById(@PathVariable("id") Long id){
+        Danger danger = dangerService.findById(id);
+
+        DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+        return dangerDTO;
+    }
+
     @PostMapping
     public ResponseEntity<?> save(@RequestBody DangerDTO dangerDTO) {
         try{
@@ -102,13 +117,4 @@ public class DangerController {
             return  ResponseEntity.badRequest().body(responseDTO);
         }
     }
-
-    @GetMapping("/{id}")
-    public DangerDTO findById(@PathVariable("id") Long id){
-        Danger danger = dangerService.findById(id);
-
-        DangerDTO dangerDTO = dangerService.dangerDTO(danger);
-        return dangerDTO;
-    }
-
 }

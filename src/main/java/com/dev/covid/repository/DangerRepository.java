@@ -11,4 +11,5 @@ public interface DangerRepository extends JpaRepository<Danger, Long> {
 
     List<Danger> findBydangerCareDateBetween(LocalDate startDate, LocalDate endDate);
 
+    List<Danger> findBydangerCareReleaseBetween(LocalDate startDate, LocalDate endDate);
 }
