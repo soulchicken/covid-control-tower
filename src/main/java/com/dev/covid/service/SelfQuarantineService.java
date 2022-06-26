@@ -4,10 +4,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 import com.dev.covid.DTO.SelfQuarantineDTO;
 import com.dev.covid.model.Patient;
@@ -20,7 +17,7 @@ import com.dev.covid.repository.SelfQuarantineRepository;
 
 @Service
 public class SelfQuarantineService {
-	static SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+
 	@Autowired
 	private SelfQuarantineRepository selfQuarantineRepository;
 
@@ -31,42 +28,36 @@ public class SelfQuarantineService {
 		return selfQuarantineRepository.findAll();
 	}
 
-	public SelfQuarantine save(SelfQuarantineDTO selfQuarantineDTO) {
+	public SelfQuarantine save(SelfQuarantineDTO selfQuarantineDTO) throws Exception{
 		Patient patient = patientRepository.findByPeopleName(selfQuarantineDTO.getPatientName());
-		SelfQuarantine newSelfQuarantine = SelfQuarantine
-				.builder()
-				.selfQuarantineDate(selfQuarantineDTO.getSelfQuarantineDate())
-				.selfQuarantineRelease(selfQuarantineDTO.getSelfQuarantineRelease())
-				.selfQuarantineName(patient.getPeopleName())
-				.patient(patient)
-				.build();
-		SelfQuarantine madenSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
-		patient.setSelfQuarantine(madenSelfQuarantine);
+		if (patient == null){
+			throw new Exception("일치하는 환자 이름이 없습니다.");
+		}
+		SelfQuarantine newSelfQuarantine = makeSelfQuarantine(patient, selfQuarantineDTO);
+		SelfQuarantine madeSelfQuarantine = selfQuarantineRepository.save(newSelfQuarantine);
+		patient.setSelfQuarantine(madeSelfQuarantine);
 		patientRepository.save(patient);
-		return madenSelfQuarantine;
+		return madeSelfQuarantine;
 	}
 
-	public List<SelfQuarantine> delete(Long id) {
-		final Optional<SelfQuarantine> foundSelfQuarantine = selfQuarantineRepository.findById(id);
-		foundSelfQuarantine.ifPresent(selfQuarantine -> selfQuarantineRepository.delete(selfQuarantine));
+	public List<SelfQuarantine> delete(Long id) throws Exception {
+
+		SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(id).orElseThrow(Exception::new);
+		selfQuarantineRepository.delete(foundSelfQuarantine);
 		return selfQuarantineRepository.findAll();
 	}
 
-	public List<SelfQuarantine> put(SelfQuarantine selfQuarantine) {
-		final Optional<SelfQuarantine> foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId());
-		foundSelfQuarantine.ifPresent(updateSelfQuarantine -> {
-			updateSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
-			updateSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
-			selfQuarantineRepository.save(updateSelfQuarantine);
-		});
-		return selfQuarantineRepository.findAll();
+	public SelfQuarantine put(SelfQuarantine selfQuarantine) throws Exception {
+		SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId()).orElseThrow(Exception::new);
+		foundSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
+		foundSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
+		return selfQuarantineRepository.save(foundSelfQuarantine);
+
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
 		LocalDate startDate = LocalDate.parse(start);
 		LocalDate endDate = LocalDate.parse(end);
-		System.out.println("스타트 데이트 "+start);
-		System.out.println("엔드 데이트 "+end);
 		return selfQuarantineRepository.findByselfQuarantineDateBetween(startDate,endDate);
 
 	}
@@ -78,18 +69,41 @@ public class SelfQuarantineService {
 
 	}
 
-	public SelfQuarantine findById(Long id) {
-		try {			
+	public SelfQuarantine findById(Long id) throws Exception {
+
 			SelfQuarantine selfQuarantine = selfQuarantineRepository.findById(id).orElseThrow(Exception::new);
 			return selfQuarantine;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return null;
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineName(String name) {
 		return selfQuarantineRepository.findByselfQuarantineName(name);
 	}
 
+	public SelfQuarantineDTO selfQuarantineToDTO(SelfQuarantine selfQuarantine){
+		return SelfQuarantineDTO
+				.builder()
+				.patientName(selfQuarantine.getPatient().getPeopleName())
+				.selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+				.selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+				.selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+				.build();
+	}
+
+	public List<SelfQuarantineDTO> selfQuarantineListToDTOList(List<SelfQuarantine> selfQuarantineList){
+		List<SelfQuarantineDTO> selfQuarantineDTOList = new ArrayList<>();
+		for (SelfQuarantine selfQuarantine : selfQuarantineList) {
+			selfQuarantineDTOList.add(selfQuarantineToDTO(selfQuarantine));
+		}
+		return selfQuarantineDTOList;
+	}
+
+	public SelfQuarantine makeSelfQuarantine(Patient patient, SelfQuarantineDTO selfQuarantineDTO){
+		return SelfQuarantine
+				.builder()
+				.selfQuarantineDate(selfQuarantineDTO.getSelfQuarantineDate())
+				.selfQuarantineRelease(selfQuarantineDTO.getSelfQuarantineRelease())
+				.selfQuarantineName(patient.getPeopleName())
+				.patient(patient)
+				.build();
+	}
 }

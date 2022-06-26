@@ -4,6 +4,7 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.util.List;
 
 
 @RequiredArgsConstructor
@@ -24,5 +25,7 @@ public class HospitalRoom {
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hospitalRoom")
+    private List<Danger> dangerList;
 
 }

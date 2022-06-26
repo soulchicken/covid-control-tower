@@ -13,13 +13,11 @@ import java.util.Date;
 @Entity
 @Table(name = "infectiontracking")
 public class InfectionTracking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "infectiontracking_id", nullable = false)
     private Long infectionTrackingId;
-
-    @Column(name = "infectiontracking_name")
-    private String infectionTrackingName;
 
     @Column(name = " infectiontracking_area")
     private String infectionTrackingArea;
@@ -30,7 +28,7 @@ public class InfectionTracking {
     @Column(name = "infectiontracking_cause")
     private String infectionTrackingCause;
 
-    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Patient.class) // student와 major의 관계는 다대일 (N:1)
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Patient.class)
     @JoinColumn(name = "people_id")
     private Patient patient;
 
