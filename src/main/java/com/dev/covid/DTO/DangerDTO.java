@@ -1,11 +1,13 @@
 package com.dev.covid.DTO;
 
+import com.dev.covid.model.Danger;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -16,6 +18,7 @@ public class DangerDTO {
     private Long patientId;
     private Date dangerCareDate;
     private Date dangerCareRelease;
-    private Long hospitalRoomnumber;
+    private Long hospitalRoomnumberId;
+    private List<String> dangerList;
 
 }

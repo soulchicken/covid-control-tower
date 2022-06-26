@@ -26,10 +26,11 @@ public class Danger {
     private Date dangerCareDate;
     @Column(name = "danger_care_release")
     private Date dangerCareRelease;
-    @Column(name = "hospitalroom_roomnumber")
 
-    private Long hospitalRoomnumber;
-
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = HospitalRoom.class)
+    @JoinColumn(name = "hospitalroom_roomnumber")
+//    private Long hospitalRoomnumber;
+    private HospitalRoom hospitalRoom;
 
 
     
