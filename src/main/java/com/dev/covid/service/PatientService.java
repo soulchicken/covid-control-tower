@@ -6,20 +6,21 @@ import com.dev.covid.model.Patient;
 import com.dev.covid.repository.ManagerRepository;
 import com.dev.covid.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@org.springframework.stereotype.Service
-public class PatientService implements Service {
+@Service
+public class PatientService {
     @Autowired
     private PatientRepository patientRepository;
 
     @Autowired
     private ManagerRepository managerRepository;
 
-    @Override
-    public Patient save(PatientDTO patientDTO) {
+
+    public Patient save(PatientDTO patientDTO) throws Exception {
         Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
         Patient patient = new Patient();
         foundManager.ifPresent(manager -> {
@@ -35,7 +36,6 @@ public class PatientService implements Service {
         return patientRepository.save(patient);
     }
 
-    @Override
     public Patient update(Patient patient) {
         Patient foundPatient = patientRepository.findByPeopleName(patient.getPeopleName());
 
@@ -49,13 +49,13 @@ public class PatientService implements Service {
         return patientRepository.save(foundPatient);
     }
 
-    @Override
+
     public List<Patient> findAll() {
         return patientRepository.findAll();
     }
 
-    @Override
-    public List<Patient> delete(Long id) {
+
+    public List<Patient> delete(Long id) throws Exception {
         final Optional<Patient> foundPatient = patientRepository.findById(id);
 
         foundPatient.ifPresent(patient -> {
@@ -64,7 +64,7 @@ public class PatientService implements Service {
         return patientRepository.findAll();
     }
 
-    @Override
+
     public Patient findById(Long id) {
         final Optional<Patient> foundPatient = patientRepository.findById(id);
         Patient newPatient = new Patient();

@@ -27,7 +27,10 @@ public class Danger {
     @Column(name = "danger_care_release")
     private Date dangerCareRelease;
     @Column(name = "hospitalroom_roomnumber")
+
     private Long hospitalRoomnumber;
 
 
+
+    
 }

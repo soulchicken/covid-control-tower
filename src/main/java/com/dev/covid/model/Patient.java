@@ -3,6 +3,7 @@ package com.dev.covid.model;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @RequiredArgsConstructor
@@ -39,4 +40,12 @@ public class Patient {
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Manager.class)
     @JoinColumn(name = "manager_id")
     private Manager manager;
+
+    @ManyToOne(fetch = FetchType.LAZY, targetEntity = Hospital.class)
+    @JoinColumn(name = "hospital_id", nullable = false)
+    private Hospital hospital;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "patient")
+    private List<InfectionTracking> infectionTrackingList;
+
 }
