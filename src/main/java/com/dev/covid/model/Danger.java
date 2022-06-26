@@ -3,7 +3,7 @@ package com.dev.covid.model;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 
 @Builder
 @RequiredArgsConstructor
@@ -23,13 +23,16 @@ public class Danger {
     @Column(name = "danger_id")
     private Long dangerId;
     @Column(name = "danger_care_date")
-    private Date dangerCareDate;
+    private LocalDate dangerCareDate;
     @Column(name = "danger_care_release")
-    private Date dangerCareRelease;
+
+    private LocalDate dangerCareRelease;
+    @Column(name = "hospitalroom_roomnumber")
+    private Long hospitalRoomnumber;
+
 
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = HospitalRoom.class)
     @JoinColumn(name = "hospitalroom_roomnumber")
-//    private Long hospitalRoomnumber;
     private HospitalRoom hospitalRoom;
 
 
