@@ -50,7 +50,6 @@ public class SelfQuarantineController {
             ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 id가 없습니다.").build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 
     @GetMapping("/name/{name}")
@@ -106,7 +105,6 @@ public class SelfQuarantineController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 
     @PutMapping
@@ -120,7 +118,6 @@ public class SelfQuarantineController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 
     @DeleteMapping("/{id}")
@@ -134,6 +131,6 @@ public class SelfQuarantineController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
+    
 }

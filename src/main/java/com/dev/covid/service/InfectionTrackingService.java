@@ -1,6 +1,5 @@
 package com.dev.covid.service;
 
-
 import com.dev.covid.DTO.InfectionTrackingDTO;
 import com.dev.covid.model.InfectionTracking;
 import com.dev.covid.model.Patient;
@@ -20,7 +19,7 @@ public class InfectionTrackingService {
 
     @Autowired
     private InfectionTrackingRepository infectionTrackingRepository;
-    
+
     @Autowired
     private PatientRepository patientRepository;
 
@@ -67,6 +66,7 @@ public class InfectionTrackingService {
     }
 
     public List<InfectionTrackingDTO> makeInfectionTrackingDTOList(List<InfectionTracking> infectionTrackingList){
+
         List<InfectionTrackingDTO> infectionTrackingDTOList = new ArrayList<>();
         for (InfectionTracking infectionTracking : infectionTrackingList){
             infectionTrackingDTOList.add(
@@ -77,6 +77,7 @@ public class InfectionTrackingService {
     }
 
     public InfectionTracking makeInfectionTracking(Patient patient, InfectionTrackingDTO infectionTrackingDTO){
+
         return InfectionTracking
                 .builder()
                 .infectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea())

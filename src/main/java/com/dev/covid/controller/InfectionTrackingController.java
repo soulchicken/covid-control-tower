@@ -38,7 +38,6 @@ public class InfectionTrackingController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 
     @PutMapping
@@ -66,7 +65,6 @@ public class InfectionTrackingController {
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
-
     }
 
 }

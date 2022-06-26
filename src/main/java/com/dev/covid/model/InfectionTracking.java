@@ -13,6 +13,7 @@ import java.util.Date;
 @Entity
 @Table(name = "infectiontracking")
 public class InfectionTracking {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "infectiontracking_id", nullable = false)
