@@ -25,42 +25,33 @@ public class DangerService {
         return repository.findAll();
     }
 
-    public Danger save(DangerDTO dangerDTO) {
-        Optional<Patient> patient = patientRepository.findById(dangerDTO.getPatientId());
+    public Danger save(DangerDTO dangerDTO) throws Exception{
+       Patient patient = patientRepository.findById(dangerDTO.getPatientId()).get();
         Danger newDanger = Danger
                 .builder()
-                .patient(patient.get())
+                .patient(patient)
                 .dangerId(dangerDTO.getDangerId())
                 .dangerCareDate(dangerDTO.getDangerCareDate())
                 .dangerCareRelease(dangerDTO.getDangerCareRelease())
                 .hospitalRoomnumber(dangerDTO.getHospitalRoomnumber())
                 .build();
-        Danger mDanger = repository.save(newDanger);
-        return mDanger;
+        return repository.save(newDanger);
     }
 
-    public List<Danger> update(Danger danger) {
-        final Optional<Danger> findDanger = repository.findById(danger.getDangerId());
-        findDanger.ifPresent(newDanger -> {
-            newDanger.setDangerCareDate(danger.getDangerCareDate());
-            newDanger.setDangerCareRelease(danger.getDangerCareRelease());
-            newDanger.setHospitalRoomnumber(danger.getHospitalRoomnumber());
+    public Danger update(DangerDTO dangerDTO) throws Exception{
+        final Danger findDanger = repository.findById(dangerDTO.getDangerId()).get();
 
+        findDanger.setDangerCareDate(dangerDTO.getDangerCareDate());
+        findDanger.setDangerCareRelease(dangerDTO.getDangerCareRelease());
 
-            repository.save(newDanger);
-        });
-        return repository.findAll();
+            return repository.save(findDanger);
+
     }
 
-    public List<Danger> delete(Long id) {
-        final Optional<Danger> findDanger = repository.findById(id);
-
-        findDanger.ifPresent(danger -> {
-            // programList : 삭제하고자 하는 엔터티
-            repository.delete(danger);
-        });
-
-        return repository.findAll();
+    public Danger delete(Long id) {
+       final Danger findDanger = repository.findById(id).get();
+            repository.delete(findDanger);
+        return findDanger;
     }
 
     public DangerDTO dangerDTO(Danger danger){
