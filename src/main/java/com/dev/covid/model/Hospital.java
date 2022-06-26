@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Setter
 @Getter
-
+@Builder
 @ToString
 @Entity
 public class Hospital {
