@@ -1,34 +1,42 @@
 package com.dev.covid.controller;
 
+import com.dev.covid.DTO.HospitalDTO;
 import com.dev.covid.DTO.PatientDTO;
+import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.DTO.SelfQuarantineDTO;
+import com.dev.covid.model.Hospital;
 import com.dev.covid.model.Patient;
 import com.dev.covid.model.SelfQuarantine;
-import com.dev.covid.service.Service;
+import com.dev.covid.service.PatientService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("api/patient")
 public class PatientController {
     @Autowired
-    private Service service;
-
+    private PatientService patientService;
     /**
      * 전체 환자를 조회를 한다.
      */
     @GetMapping
-    public List<PatientDTO> findAll() {
-        List<Patient> patientList = service.findAll();
+    public ResponseEntity<?> findAll() {
+        List<Patient> patientList = patientService.findAll();
         List<PatientDTO> patientDTOList = new ArrayList<>();
         for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
+            Hospital hospital = patient.getHospital();
+            HospitalDTO hospitalDTO;
             SelfQuarantineDTO selfQuarantineDTO;
-            if (selfQuarantine == null) {
+            if (selfQuarantine == null || hospital == null) {
                 selfQuarantineDTO = null;
+                hospitalDTO = null;
             } else {
                 selfQuarantineDTO = SelfQuarantineDTO
                         .builder()
@@ -49,16 +57,17 @@ public class PatientController {
                     .peopleGender(patient.getPeopleGender())
                     .peoplePhone(patient.getPeoplePhone())
                     .selfQuarantineDTO(selfQuarantineDTO)
+                    .hospitalId(patient.getHospital().getHospitalId())
                     .build();
             patientDTOList.add(patientDTO);
         }
-        return patientDTOList;
+        return ResponseEntity.ok(patientDTOList);
     }
 
 
     @GetMapping("/id/{patientId}")
     public PatientDTO findById(@PathVariable("patientId") Long id) {
-        Patient newPatient = service.findById(id);
+        Patient newPatient = patientService.findById(id);
 
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
@@ -71,6 +80,7 @@ public class PatientController {
                     .peopleId(newPatient.getPeopleId())
                     .peopleName(newPatient.getPeopleName())
                     .peoplePhone(newPatient.getPeoplePhone())
+                    .hospitalId(newPatient.getHospital().getHospitalId())
                     .build();
             return patientDTO;
         }
@@ -93,6 +103,7 @@ public class PatientController {
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
                 .selfQuarantineDTO(selfQuarantineDTO)
+                .hospitalId(newPatient.getHospital().getHospitalId())
                 .build();
         return patientDTO;
 
@@ -100,8 +111,9 @@ public class PatientController {
     }
 
     @PostMapping
-    public PatientDTO save(@RequestBody PatientDTO newPatientDTO) {
-        Patient newPatient = service.save(newPatientDTO);
+    public ResponseEntity<?> save(@RequestBody PatientDTO newPatientDTO) {
+        try{
+        Patient newPatient = patientService.save(newPatientDTO);
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
             PatientDTO patientDTO = PatientDTO
@@ -114,8 +126,10 @@ public class PatientController {
                     .peopleName(newPatient.getPeopleName())
                     .managerId(newPatient.getManager().getManagerId())
                     .peoplePhone(newPatient.getPeoplePhone())
+                    .hospitalId(newPatient.getHospital().getHospitalId())
                     .build();
-            return patientDTO;
+            return ResponseEntity.ok(patientDTO);
+
         }
 
         SelfQuarantineDTO selfQuarantineDTO = SelfQuarantineDTO
@@ -136,8 +150,14 @@ public class PatientController {
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
                 .selfQuarantineDTO(selfQuarantineDTO)
+                .hospitalId(newPatient.getHospital().getHospitalId())
                 .build();
-        return patientDTO;
+        return ResponseEntity.ok(patientDTO);
+    } catch (Exception e) {
+            log.error("Not found Patient ID {}" + e.getMessage(), newPatientDTO.getPeopleId());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     // putMapping
@@ -148,7 +168,7 @@ public class PatientController {
     @PutMapping
     public PatientDTO update(@RequestBody Patient patient) {
 
-        Patient newPatient = service.update(patient);
+        Patient newPatient = patientService.update(patient);
         SelfQuarantine selfQuarantine = newPatient.getSelfQuarantine();
         if (selfQuarantine == null) {
             PatientDTO patientDTO = PatientDTO
@@ -160,6 +180,7 @@ public class PatientController {
                     .peopleName(newPatient.getPeopleName())
                     .managerId(newPatient.getManager().getManagerId())
                     .peoplePhone(newPatient.getPeoplePhone())
+                    .hospitalId(newPatient.getHospital().getHospitalId())
                     .build();
             return patientDTO;
         }
@@ -182,43 +203,50 @@ public class PatientController {
                 .peopleName(newPatient.getPeopleName())
                 .peoplePhone(newPatient.getPeoplePhone())
                 .selfQuarantineDTO(selfQuarantineDTO)
+                .hospitalId(newPatient.getHospital().getHospitalId())
                 .build();
         return patientDTO;
     }
 
     @DeleteMapping("/{patientId}")
-    public List<PatientDTO> delete(@PathVariable("patientId") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("patientId") Long id) {
+        try {
+            List<Patient> patientList = patientService.delete(id);
+            List<PatientDTO> patientDTOList = new ArrayList<>();
+            for (Patient patient : patientList) {
+                SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
+                SelfQuarantineDTO selfQuarantineDTO;
+                if (selfQuarantine == null) {
+                    selfQuarantineDTO = null;
+                } else {
+                    selfQuarantineDTO = SelfQuarantineDTO
+                            .builder()
+                            .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
+                            .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
+                            .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
+                            .patientName(patient.getPeopleName())
+                            .build();
+                }
 
-        List<Patient> patientList = service.delete(id);
-        List<PatientDTO> patientDTOList = new ArrayList<>();
-        for (Patient patient : patientList) {
-            SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
-            SelfQuarantineDTO selfQuarantineDTO;
-            if (selfQuarantine == null) {
-                selfQuarantineDTO = null;
-            } else {
-                selfQuarantineDTO = SelfQuarantineDTO
+                PatientDTO patientDTO = PatientDTO
                         .builder()
-                        .selfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease())
-                        .selfQuarantineId(selfQuarantine.getSelfQuarantineId())
-                        .selfQuarantineDate(selfQuarantine.getSelfQuarantineDate())
-                        .patientName(patient.getPeopleName())
+                        .peopleName(patient.getPeopleName())
+                        .peopleAge(patient.getPeopleAge())
+                        .peopleHome(patient.getPeopleHome())
+                        .peopleId(patient.getPeopleId())
+                        .peopleGender(patient.getPeopleGender())
+                        .peoplePhone(patient.getPeoplePhone())
+                        .selfQuarantineDTO(selfQuarantineDTO)
+                        .hospitalId(patient.getHospital().getHospitalId())
                         .build();
+                patientDTOList.add(patientDTO);
             }
-
-            PatientDTO patientDTO = PatientDTO
-                    .builder()
-                    .peopleName(patient.getPeopleName())
-                    .peopleAge(patient.getPeopleAge())
-                    .peopleHome(patient.getPeopleHome())
-                    .peopleId(patient.getPeopleId())
-                    .peopleGender(patient.getPeopleGender())
-                    .peoplePhone(patient.getPeoplePhone())
-                    .selfQuarantineDTO(selfQuarantineDTO)
-                    .build();
-            patientDTOList.add(patientDTO);
+            return ResponseEntity.ok(patientDTOList);
+        } catch (Exception e){
+            log.error("Not found Patient ID {} " + e.getMessage(), id);
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return  ResponseEntity.badRequest().body(responseDTO);
         }
-        return patientDTOList;
     }
 
 }

@@ -1,6 +1,7 @@
 package com.dev.covid.model;
 
 import lombok.*;
+import org.hibernate.annotations.Fetch;
 
 
 import javax.persistence.*;
@@ -23,8 +24,6 @@ public class Hospital {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hospital_id", nullable = false)
-
-
     private Long hospitalId;
 
     @Column(name = "hospital_name")
@@ -43,4 +42,6 @@ public class Hospital {
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "hospital", cascade = CascadeType.ALL)
     private List<HospitalRoom> hospitalRoomList;
 
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "hospital", cascade = CascadeType.ALL)
+    private List<Patient> patientList;
 }
