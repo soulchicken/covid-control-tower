@@ -54,15 +54,14 @@ public class DangerController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Danger updateDanger) {
+    public ResponseEntity<?> update(@RequestBody DangerDTO updateDangerDTO) {
         try{
-            List<Danger> dangerList = dangerService.update(updateDanger);
+            Danger dangerList = dangerService.update(updateDangerDTO);
             List<DangerDTO> dangerDTOList = new ArrayList<>();
-            for (Danger danger : dangerList) {
+
                 dangerDTOList.add(
-                        dangerService.dangerDTO(danger)
+                        dangerService.dangerDTO(dangerList)
                 );
-            }
             return ResponseEntity.ok(dangerDTOList);
         }catch (Exception e){
             log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
@@ -74,13 +73,11 @@ public class DangerController {
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
-            List<Danger> dangerList = dangerService.delete(id);
+           Danger dangerList = dangerService.delete(id);
             List<DangerDTO> dangerDTOList = new ArrayList<>();
-            for (Danger danger : dangerList) {
                 dangerDTOList.add(
-                        dangerService.dangerDTO(danger)
+                        dangerService.dangerDTO(dangerList)
                 );
-            }
             return ResponseEntity.ok(dangerDTOList);
         }catch (Exception e){
             log.error("고위험군 환자 정보 삭제에 실패했습니다. :" + e.getMessage());
