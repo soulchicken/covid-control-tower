@@ -31,38 +31,38 @@ public class DangerService {
     }
 
 
-    public Danger save(DangerDTO dangerDTO) throws Exception{
-       Patient patient = patientRepository.findById(dangerDTO.getPatientId()).orElseThrow(Exception::new);
-
+    public Danger save(DangerDTO dangerDTO) throws Exception {
+        Patient patient = patientRepository.findById(dangerDTO.getPatientId()).orElseThrow(Exception::new);
+        HospitalRoom hospitalRoom = hospitalRoomRepository.findById(dangerDTO.getHospitalRoomnumberId()).orElseThrow(Exception::new);
         Danger newDanger = Danger
                 .builder()
                 .patient(patient)
                 .dangerId(dangerDTO.getDangerId())
                 .dangerCareDate(dangerDTO.getDangerCareDate())
                 .dangerCareRelease(dangerDTO.getDangerCareRelease())
-                .hospitalRoom(hospitalRoom.get())
+                .hospitalRoom(hospitalRoom)
                 .build();
         return repository.save(newDanger);
     }
 
 
-    public Danger update(DangerDTO dangerDTO) throws Exception{
+    public Danger update(DangerDTO dangerDTO) throws Exception {
         final Danger findDanger = repository.findById(dangerDTO.getDangerId()).orElseThrow(Exception::new);
 
         findDanger.setDangerCareDate(dangerDTO.getDangerCareDate());
         findDanger.setDangerCareRelease(dangerDTO.getDangerCareRelease());
 
-            return repository.save(findDanger);
+        return repository.save(findDanger);
 
     }
 
-    public Danger delete(Long id) throws Exception{
-       final Danger findDanger = repository.findById(id).orElseThrow(Exception::new);
-            repository.delete(findDanger);
+    public Danger delete(Long id) throws Exception {
+        final Danger findDanger = repository.findById(id).orElseThrow(Exception::new);
+        repository.delete(findDanger);
         return findDanger;
     }
 
-    public DangerDTO dangerDTO(Danger danger){
+    public DangerDTO dangerDTO(Danger danger) {
         return DangerDTO
                 .builder()
                 .dangerId(danger.getDangerId())

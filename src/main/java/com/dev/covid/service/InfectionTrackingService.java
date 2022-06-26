@@ -36,7 +36,6 @@ public class InfectionTrackingService {
     public InfectionTracking update(InfectionTrackingDTO infectionTrackingDTO) throws Exception {
             final InfectionTracking findInfectionTracking = infectionTrackingRepository.findById(infectionTrackingDTO.getInfectionTrackingId()).orElseThrow(Exception::new);
 
-            findInfectionTracking.setInfectionTrackingName(infectionTrackingDTO.getInfectionTrackingName());
             findInfectionTracking.setInfectionTrackingArea(infectionTrackingDTO.getInfectionTrackingArea());
             findInfectionTracking.setInfectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate());
             findInfectionTracking.setInfectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause());
@@ -60,7 +59,6 @@ public class InfectionTrackingService {
                 .infectionTrackingCause(infectionTracking.getInfectionTrackingCause())
                 .infectionTrackingDate(infectionTracking.getInfectionTrackingDate())
                 .infectionTrackingId(infectionTracking.getInfectionTrackingId())
-                .infectionTrackingName(infectionTracking.getInfectionTrackingName())
                 .patientPeopleId(infectionTracking.getPatient().getPeopleId())
                 .build();
     }
@@ -84,7 +82,6 @@ public class InfectionTrackingService {
                 .infectionTrackingCause(infectionTrackingDTO.getInfectionTrackingCause())
                 .infectionTrackingDate(infectionTrackingDTO.getInfectionTrackingDate())
                 .infectionTrackingId(infectionTrackingDTO.getInfectionTrackingId())
-                .infectionTrackingName(infectionTrackingDTO.getInfectionTrackingName())
                 .patient(patient)
                 .build();
     }

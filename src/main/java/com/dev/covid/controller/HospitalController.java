@@ -66,11 +66,9 @@ public class HospitalController {
 
     // 수정
     @PutMapping
-
-
-    public ResponseEntity<?> update(@RequestBody HospitalDTO updatehospital) {
+    public ResponseEntity<?> update(@RequestBody HospitalDTO updateHospitalDTO) {
         try {
-            Hospital newHospital = hospitalService.update(updatehospital);
+            Hospital newHospital = hospitalService.update(updateHospitalDTO);
                 List<Long> hospitalRoomNumberList = new ArrayList<>();
                 for (HospitalRoom hospitalRoom : newHospital.getHospitalRoomList()) {
                     hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());

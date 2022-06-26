@@ -13,7 +13,6 @@ import java.util.Date;
 @AllArgsConstructor
 public class InfectionTrackingDTO {
     private Long infectionTrackingId;
-    private String infectionTrackingName;
     private String infectionTrackingArea;
     private Date infectionTrackingDate;
     private String infectionTrackingCause;

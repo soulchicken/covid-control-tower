@@ -51,6 +51,16 @@ public class ManagerService {
 				.build();
 	}
 
+	public ManagerDTO managerToDTO(Manager manager, List<String> patientNameList) {
+		return ManagerDTO
+				.builder()
+				.managerId(manager.getManagerId())
+				.managerPhone(manager.getManagerPhone())
+				.managerName(manager.getManagerName())
+				.patientNameList(patientNameList)
+				.build();
+	}
+
 	public List<ManagerDTO> managerToDTOList(List<Manager> managerList) {
 		List<ManagerDTO> managerDTOList = new ArrayList<>();
 		for (Manager manager : managerList) {
@@ -58,7 +68,7 @@ public class ManagerService {
 			for (Patient patient : manager.getPatientList()) {
 				patientNameList.add(patient.getPeopleName());
 			}
-			managerDTOList.add(managerToDTO(manager));
+			managerDTOList.add(managerToDTO(manager,patientNameList));
 		}
 		return managerDTOList;
 	}

@@ -1,18 +1,22 @@
 package com.dev.covid.service;
 
+import com.dev.covid.DTO.InfectionTrackingDTO;
 import com.dev.covid.DTO.PatientDTO;
+import com.dev.covid.DTO.SelfQuarantineDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
 import com.dev.covid.repository.HospitalRepository;
 import com.dev.covid.repository.ManagerRepository;
 import com.dev.covid.repository.PatientRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @Service
 public class PatientService {
     @Autowired
@@ -24,12 +28,9 @@ public class PatientService {
     @Autowired
     private ManagerRepository managerRepository;
 
-    @Autowired
-    private HospitalRepository hospitalRepository;
-
     public Patient save(PatientDTO patientDTO) throws Exception {
 
-        Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
+        Manager manager = managerRepository.findById(patientDTO.getManagerId()).orElseThrow(Exception::new);
         Hospital hospital = hospitalRepository.findById(patientDTO.getHospitalId()).orElseThrow(Exception::new);
 
         Patient patient = new Patient();
@@ -72,21 +73,68 @@ public class PatientService {
     }
 
 
-    public Patient findById(Long id) {
-        final Optional<Patient> foundPatient = patientRepository.findById(id);
-        Patient newPatient = new Patient();
-        foundPatient.ifPresent(patient -> {
-            newPatient.setPeopleAge(patient.getPeopleAge());
-            newPatient.setPeopleName(patient.getPeopleName());
-            newPatient.setPeopleGender(patient.getPeopleGender());
-            newPatient.setPeopleHome(patient.getPeopleHome());
-            newPatient.setManager(patient.getManager());
-            newPatient.setPeoplePhone(patient.getPeoplePhone());
-            newPatient.setSelfQuarantine(patient.getSelfQuarantine());
-            newPatient.setPeopleId(patient.getPeopleId());
-            newPatient.setPeopleIsDanger(patient.getPeopleIsDanger());
-        });
-        return newPatient;
+    public Patient findById(Long id) throws Exception {
+        Patient foundPatient = patientRepository.findById(id).orElseThrow(Exception::new);
+        return foundPatient;
     }
 
+    public PatientDTO makePatientDTO(Patient patient, SelfQuarantineDTO selfQuarantineDTO){
+        return PatientDTO
+                .builder()
+                .peopleAge(patient.getPeopleAge())
+                .peopleGender(patient.getPeopleGender())
+                .peopleHome(patient.getPeopleHome())
+                .managerId(patient.getManager().getManagerId())
+                .peopleId(patient.getPeopleId())
+                .peopleName(patient.getPeopleName())
+                .peoplePhone(patient.getPeoplePhone())
+                .selfQuarantineDTO(selfQuarantineDTO)
+                .hospitalId(patient.getHospital().getHospitalId())
+                .build();
+    }
+
+    public PatientDTO makePatientDTO(Patient patient){
+        return PatientDTO
+                .builder()
+                .peopleAge(patient.getPeopleAge())
+                .peopleGender(patient.getPeopleGender())
+                .peopleHome(patient.getPeopleHome())
+                .managerId(patient.getManager().getManagerId())
+                .peopleId(patient.getPeopleId())
+                .peopleName(patient.getPeopleName())
+                .peoplePhone(patient.getPeoplePhone())
+                .hospitalId(patient.getHospital().getHospitalId())
+                .build();
+    }
+
+    public PatientDTO makePatientDTO(Patient patient, SelfQuarantineDTO selfQuarantineDTO, List<InfectionTrackingDTO> infectionTrackingDTOList){
+        return PatientDTO
+                .builder()
+                .peopleAge(patient.getPeopleAge())
+                .peopleGender(patient.getPeopleGender())
+                .peopleHome(patient.getPeopleHome())
+                .managerId(patient.getManager().getManagerId())
+                .peopleId(patient.getPeopleId())
+                .peopleName(patient.getPeopleName())
+                .peoplePhone(patient.getPeoplePhone())
+                .selfQuarantineDTO(selfQuarantineDTO)
+                .infectionTrackingDTOList(infectionTrackingDTOList)
+                .hospitalId(patient.getHospital().getHospitalId())
+                .build();
+    }
+
+    public PatientDTO makePatientDTO(Patient patient, List<InfectionTrackingDTO> infectionTrackingDTOList){
+        return PatientDTO
+                .builder()
+                .peopleAge(patient.getPeopleAge())
+                .peopleGender(patient.getPeopleGender())
+                .peopleHome(patient.getPeopleHome())
+                .managerId(patient.getManager().getManagerId())
+                .peopleId(patient.getPeopleId())
+                .peopleName(patient.getPeopleName())
+                .peoplePhone(patient.getPeoplePhone())
+                .infectionTrackingDTOList(infectionTrackingDTOList)
+                .hospitalId(patient.getHospital().getHospitalId())
+                .build();
+    }
 }

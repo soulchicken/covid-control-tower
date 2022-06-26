@@ -19,9 +19,6 @@ public class InfectionTracking {
     @Column(name = "infectiontracking_id", nullable = false)
     private Long infectionTrackingId;
 
-    @Column(name = "infectiontracking_name")
-    private String infectionTrackingName;
-
     @Column(name = " infectiontracking_area")
     private String infectionTrackingArea;
 

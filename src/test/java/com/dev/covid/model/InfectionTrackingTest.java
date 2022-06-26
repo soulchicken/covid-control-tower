@@ -35,7 +35,6 @@ public class InfectionTrackingTest extends BaseControllerTest {
 
         InfectionTrackingDTO infectionTrackingDTO = InfectionTrackingDTO
                 .builder()
-                .infectionTrackingName("이거 머임")
                 .infectionTrackingArea("뚝섬")
                 .infectionTrackingCause("모임")
                 .patientPeopleId(1L)
