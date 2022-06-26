@@ -2,13 +2,13 @@ package com.dev.covid.controller;
 
 
 import com.dev.covid.DTO.HospitalDTO;
+import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.model.HospitalRoom;
-import com.dev.covid.model.Patient;
-
-import com.dev.covid.model.Hospital;
 import com.dev.covid.service.HospitalService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("hospital")
+@Slf4j
 public class HospitalController {
 
     @Autowired
@@ -25,7 +26,7 @@ public class HospitalController {
     // 조회
     @GetMapping
 
-    public List<HospitalDTO> findAll() {
+    public ResponseEntity<?> findAll() {
         List<Hospital> hospitalList = hospitalService.findAll();
         List<HospitalDTO> hospitalDTOList = new ArrayList<>();
         for (Hospital hospital : hospitalList) {
@@ -38,28 +39,41 @@ public class HospitalController {
                             .builder()
                             .hospitalId(hospital.getHospitalId())
                             .hospitalName(hospital.getHospitalName())
-                            .hospitalRoom(hospital.getHospitalRoom())
                             .hospitalPatientnum(hospital.getHospitalPatientnum())
                             .hospitalRoomlimit(hospital.getHospitalRoomlimit())
                             .hospitalRoomNumberList(hospitalRoomNumberList)
                             .build()
             );
         }
-        return hospitalDTOList;
+        return ResponseEntity.ok(hospitalDTOList);
 
 
     }
 
     // 삽입
     @PostMapping
-    public Hospital save(@RequestBody Hospital hospital) {
-        return hospitalService.save(hospital);
+    public ResponseEntity<?> save(@RequestBody HospitalDTO hospitalDTO) {
+        try {
+            Hospital  hospital = hospitalService.save(hospitalDTO);
+            HospitalDTO newHospitalDTO = HospitalDTO
+                    .builder()
+                    .hospitalId(hospital.getHospitalId())
+                    .hospitalName(hospital.getHospitalName())
+                    .hospitalPatientnum(hospital.getHospitalPatientnum())
+                    .hospitalRoomlimit(hospital.getHospitalRoomlimit())
+                    .build();
+            return ResponseEntity.ok(newHospitalDTO);
+        } catch (Exception e) {
+            log.error("Not found Hospital ID{}" + e.getMessage(), hospitalDTO.getHospitalId());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     // 수정
     @PutMapping
 
-    public List<HospitalDTO> update(@RequestBody Hospital Updatehospital) {
+    public ResponseEntity<?> update(@RequestBody Hospital Updatehospital) {
 
         List<Hospital> hospitalList = hospitalService.update(Updatehospital);
         List<HospitalDTO> hospitalDTOList = new ArrayList<>();
@@ -73,14 +87,13 @@ public class HospitalController {
                             .builder()
                             .hospitalId(hospital.getHospitalId())
                             .hospitalName(hospital.getHospitalName())
-                            .hospitalRoom(hospital.getHospitalRoom())
                             .hospitalPatientnum(hospital.getHospitalPatientnum())
                             .hospitalRoomlimit(hospital.getHospitalRoomlimit())
                             .hospitalRoomNumberList(hospitalRoomNumberList)
                             .build()
             );
         }
-        return hospitalDTOList;
+        return ResponseEntity.ok(hospitalDTOList);
 
 
     }
@@ -88,7 +101,7 @@ public class HospitalController {
     // 삭제
     @DeleteMapping("/{id}")
 
-    public List<HospitalDTO> delete(@PathVariable("id") Long id) {
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         List<Hospital> hospitalList = hospitalService.delete(id);
         List<HospitalDTO> hospitalDTOList = new ArrayList<>();
         for (Hospital hospital : hospitalList) {
@@ -101,14 +114,13 @@ public class HospitalController {
                             .builder()
                             .hospitalId(hospital.getHospitalId())
                             .hospitalName(hospital.getHospitalName())
-                            .hospitalRoom(hospital.getHospitalRoom())
                             .hospitalPatientnum(hospital.getHospitalPatientnum())
                             .hospitalRoomlimit(hospital.getHospitalRoomlimit())
                             .hospitalRoomNumberList(hospitalRoomNumberList)
                             .build()
             );
         }
-        return hospitalDTOList;
+        return ResponseEntity.ok(hospitalDTOList);
 
 
     }
