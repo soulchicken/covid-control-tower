@@ -34,6 +34,9 @@ public class Patient {
     @OneToOne(fetch = FetchType.EAGER, mappedBy = "patient", cascade = CascadeType.ALL)
     private SelfQuarantine selfQuarantine;
 
+    @OneToOne(fetch = FetchType.EAGER, mappedBy = "patient", cascade = CascadeType.ALL)
+    private Danger danger;
+
     @ManyToOne(fetch = FetchType.LAZY, targetEntity = Manager.class)
     @JoinColumn(name = "manager_id")
     private Manager manager;

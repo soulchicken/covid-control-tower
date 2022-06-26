@@ -2,10 +2,14 @@ package com.dev.covid.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.dev.covid.DTO.ManagerDTO;
+import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.Patient;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,85 +22,64 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dev.covid.model.Manager;
 import com.dev.covid.service.ManagerService;
 
+@Slf4j
 @RestController
 @RequestMapping("manager")
 public class ManagerController {
 
     @Autowired
-    private ManagerService service;
+    private ManagerService managerService;
 
     @GetMapping
-    public List<ManagerDTO> findAll() {
-        List<Manager> managerList = service.findAll();
-        List<ManagerDTO> managerDTOList = new ArrayList<>();
-        for (Manager manager : managerList) {
-            List<String> patientNameList = new ArrayList<>();
-            for (Patient patient : manager.getPatientList()) {
-                patientNameList.add(patient.getPeopleName());
-            }
-            managerDTOList.add(
-                    ManagerDTO
-                            .builder()
-                            .managerId(manager.getManagerId())
-                            .managerName(manager.getManagerName())
-                            .managerPhone(manager.getManagerPhone())
-                            .patientNameList(patientNameList)
-                            .build()
-            );
+    public ResponseEntity<?> findAll() {
+        List<Manager> managerList = managerService.findAll();
+        if (managerList.size() == 0) {
+            log.error("환자관리자가 없습니다.");
+            ResponseDTO responseDTO = ResponseDTO.builder().error("해당되는 사람이 없습니다.").build();
+            return ResponseEntity.badRequest().body(responseDTO);
         }
-        return managerDTOList;
+        List<ManagerDTO> managerDTOList = managerService.managerToDTOList(managerList);
+        return ResponseEntity.ok(managerDTOList);
     }
 
     @PostMapping
-    public Manager save(@RequestBody Manager manager) {
-        return service.save(manager);
+    public ResponseEntity<?> save(@RequestBody ManagerDTO managerDTO) {
+        try {
+            Manager newManager = managerService.save(managerDTO);
+            ManagerDTO newManagerDTO = managerService.managerToDTO(newManager);
+            return ResponseEntity.ok(newManagerDTO);
+        } catch (Exception e) {
+            log.error("환자관리자 정보 저장에 실패했습니다 : " + e.getStackTrace());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
+        }
     }
 
     @PutMapping
-    public List<ManagerDTO> put(@RequestBody Manager updateManager) {
-
-        List<Manager> managerList = service.put(updateManager);
-        List<ManagerDTO> managerDTOList = new ArrayList<>();
-        for (Manager manager : managerList) {
-            List<String> patientNameList = new ArrayList<>();
-            for (Patient patient : manager.getPatientList()) {
-                patientNameList.add(patient.getPeopleName());
-            }
-            managerDTOList.add(
-                    ManagerDTO
-                            .builder()
-                            .managerId(manager.getManagerId())
-                            .managerName(manager.getManagerName())
-                            .managerPhone(manager.getManagerPhone())
-                            .patientNameList(patientNameList)
-                            .build()
-            );
+    public ResponseEntity<?> put(@RequestBody ManagerDTO putManager) {
+        try {
+            Manager manager = managerService.update(putManager);
+            ManagerDTO managerDTO = managerService.managerToDTO(manager);
+            return ResponseEntity.ok(managerDTO);
+        } catch (Exception e) {
+            log.error("환자관리자 정보 변경에 실패했습니다. : " + e.getStackTrace());
+            ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
+            return ResponseEntity.badRequest().body(responseDTO);
         }
-        return managerDTOList;
-
     }
 
     @DeleteMapping("/{id}")
-    public List<ManagerDTO> delete(@PathVariable("id") Long id) {
-        List<ManagerDTO> managerDTOList = new ArrayList<>();
-        List<Manager> managerList = service.delete(id);
-        for (Manager manager : managerList) {
-            List<String> patientNameList = new ArrayList<>();
-            for (Patient patient : manager.getPatientList()) {
-                patientNameList.add(patient.getPeopleName());
-            }
-            managerDTOList.add(
-                    ManagerDTO
-                            .builder()
-                            .managerId(manager.getManagerId())
-                            .managerName(manager.getManagerName())
-                            .managerPhone(manager.getManagerPhone())
-                            .patientNameList(patientNameList)
-                            .build()
-            );
+    public ResponseEntity<?> delete(@PathVariable("id") Long id) {
+        try {
+            Manager managerList = managerService.delete(id);
+            ManagerDTO managerDTO = managerService.managerToDTO(managerList);
+            return ResponseEntity.ok(managerDTO);
+        } catch (Exception e) {
+            log.error("환자관리자 정보 삭제에 실패했습니다. : " + e.getStackTrace());
+            ResponseDTO responseDTO = ResponseDTO.builder()
+                    .error(e.getMessage())
+                    .build();
+            return ResponseEntity.badRequest().body(responseDTO);
         }
-        return managerDTOList;
     }
-
-
 }

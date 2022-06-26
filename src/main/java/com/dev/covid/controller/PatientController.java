@@ -1,10 +1,8 @@
 package com.dev.covid.controller;
 
-import com.dev.covid.DTO.HospitalDTO;
-import com.dev.covid.DTO.PatientDTO;
-import com.dev.covid.DTO.ResponseDTO;
-import com.dev.covid.DTO.SelfQuarantineDTO;
+import com.dev.covid.DTO.*;
 import com.dev.covid.model.Hospital;
+import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
 import com.dev.covid.model.SelfQuarantine;
 import com.dev.covid.service.PatientService;
@@ -32,11 +30,14 @@ public class PatientController {
         for (Patient patient : patientList) {
             SelfQuarantine selfQuarantine = patient.getSelfQuarantine();
             Hospital hospital = patient.getHospital();
+            Manager manager = patient.getManager();
+            ManagerDTO managerDTO;
             HospitalDTO hospitalDTO;
             SelfQuarantineDTO selfQuarantineDTO;
             if (selfQuarantine == null || hospital == null) {
                 selfQuarantineDTO = null;
                 hospitalDTO = null;
+                managerDTO = null;
             } else {
                 selfQuarantineDTO = SelfQuarantineDTO
                         .builder()
