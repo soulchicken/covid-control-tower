@@ -2,10 +2,7 @@ package com.dev.covid.model;
 
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Builder
@@ -16,15 +13,21 @@ import java.util.Date;
 @Entity
 @Table(name = "danger")
 public class Danger {
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "people_id")
+    private Patient patient;
+
     @Id
-    @Column(name = "patient_people_id")
-    private Long patientPeopleId;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "danger_id")
+    private Long dangerId;
     @Column(name = "danger_care_date")
     private Date dangerCareDate;
     @Column(name = "danger_care_release")
     private Date dangerCareRelease;
     @Column(name = "hospitalroom_roomnumber")
-    private Long hospitalroomRoomnumber;
+    private Long hospitalRoomnumber;
 
 
 }
