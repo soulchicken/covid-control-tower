@@ -54,16 +54,12 @@ public class DangerController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody Danger updateDanger) {
+    public ResponseEntity<?> update(@RequestBody DangerDTO updateDanger) {
         try{
-            List<Danger> dangerList = dangerService.update(updateDanger);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
-            for (Danger danger : dangerList) {
-                dangerDTOList.add(
-                        dangerService.dangerDTO(danger)
-                );
-            }
-            return ResponseEntity.ok(dangerDTOList);
+            Danger danger = dangerService.update(updateDanger);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
             log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -73,17 +69,13 @@ public class DangerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        try {
-            List<Danger> dangerList = dangerService.delete(id);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
-            for (Danger danger : dangerList) {
-                dangerDTOList.add(
-                        dangerService.dangerDTO(danger)
-                );
-            }
-            return ResponseEntity.ok(dangerDTOList);
+        try{
+            Danger danger = dangerService.delete(id);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
-            log.error("고위험군 환자 정보 삭제에 실패했습니다. :" + e.getMessage());
+            log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }

@@ -4,8 +4,9 @@ import lombok.*;
 
 
 import javax.persistence.*;
+import java.util.List;
 
-
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -14,6 +15,7 @@ import javax.persistence.*;
 @Table(name = "hospitalroom")
 public class HospitalRoom {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hospitalroom_roomnumber")
     private Long hospitalroomRoomnumber;
 
@@ -24,5 +26,7 @@ public class HospitalRoom {
     @JoinColumn(name = "hospital_id")
     private Hospital hospital;
 
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "hospitalRoom")
+    private List<Danger> dangerList;
 
 }
