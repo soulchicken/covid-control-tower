@@ -17,7 +17,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Setter
 @Getter
-
+@Builder
 @ToString
 @Entity
 public class Hospital {
@@ -28,9 +28,6 @@ public class Hospital {
 
     @Column(name = "hospital_name")
     private String hospitalName;
-
-    @Column(name = "hospital_room")
-    private int hospitalRoom;
 
     @Column(name = "hospital_patientnum")
     private int hospitalPatientnum;

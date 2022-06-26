@@ -15,7 +15,6 @@ import java.util.List;
 public class HospitalDTO {
     private Long hospitalId;
     private String hospitalName;
-    private int hospitalRoom;
     private int hospitalPatientnum;
     private int hospitalRoomlimit;
     private List<Long> hospitalRoomNumberList;
