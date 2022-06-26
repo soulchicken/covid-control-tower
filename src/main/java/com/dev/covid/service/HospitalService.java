@@ -14,12 +14,12 @@ import java.util.Optional;
 @Service
 public class HospitalService {
     @Autowired
-    private HospitalRepository repository;
+    private HospitalRepository hospitalRepository;
     @Autowired
     private HospitalRoomRepository hospitalRoomRepository;
 
     public List<Hospital> findAll() {
-        return repository.findAll();
+        return hospitalRepository.findAll();
     }
 
     public Hospital save(HospitalDTO hospitalDTO) throws Exception {
@@ -30,28 +30,21 @@ public class HospitalService {
                 .hospitalPatientnum(hospitalDTO.getHospitalPatientnum())
                 .hospitalRoomlimit(hospitalDTO.getHospitalRoomlimit())
                 .build();
-        return repository.save(hospital);
+        return hospitalRepository.save(hospital);
     }
 
-    public List<Hospital> update(Hospital hospital) {
-        final Optional<Hospital> findHospital = repository.findById((hospital.getHospitalId()));
+    public Hospital update(HospitalDTO hospitalDTO) throws Exception {
+        Hospital findHospital = hospitalRepository.findById(hospitalDTO.getHospitalId()).get();
 
-        findHospital.ifPresent(updateHospital -> {
-            updateHospital.setHospitalName(hospital.getHospitalName());
-            updateHospital.setHospitalPatientnum((hospital.getHospitalPatientnum()));
-            updateHospital.setHospitalRoomlimit(hospital.getHospitalRoomlimit());
-
-            repository.save(updateHospital);
-        });
-        return repository.findAll();
+        findHospital.setHospitalName(hospitalDTO.getHospitalName());
+        findHospital.setHospitalPatientnum((hospitalDTO.getHospitalPatientnum()));
+        findHospital.setHospitalRoomlimit(hospitalDTO.getHospitalRoomlimit());
+        return hospitalRepository.save(findHospital);
     }
 
-    public List<Hospital> delete(Long id) {
-        final Optional<Hospital> findHospital = repository.findById(id);
-
-        findHospital.ifPresent(hospital -> {
-            repository.delete(hospital);
-        });
-        return repository.findAll();
+    public Hospital delete(Long id) throws  Exception {
+        final Hospital hospital = hospitalRepository.findById(id).get();
+        hospitalRepository.delete(hospital);
+        return hospital;
     }
 }
