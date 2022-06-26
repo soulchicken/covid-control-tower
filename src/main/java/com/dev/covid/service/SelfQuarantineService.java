@@ -41,26 +41,18 @@ public class SelfQuarantineService {
 	}
 
 	public List<SelfQuarantine> delete(Long id) throws Exception {
-		try {
-			SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(id).get();
-			selfQuarantineRepository.delete(foundSelfQuarantine);
-			return selfQuarantineRepository.findAll();
-		} catch (Exception e) {
-			throw new Exception("환자 정보가 없다는");
-		}
 
+		SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(id).orElseThrow(Exception::new);
+		selfQuarantineRepository.delete(foundSelfQuarantine);
+		return selfQuarantineRepository.findAll();
 	}
 
-	public SelfQuarantine put(SelfQuarantine selfQuarantine) throws Exception{
-		try {
-			SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId()).get();
-			foundSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
-			foundSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
-			return selfQuarantineRepository.save(foundSelfQuarantine);
+	public SelfQuarantine put(SelfQuarantine selfQuarantine) throws Exception {
+		SelfQuarantine foundSelfQuarantine = selfQuarantineRepository.findById(selfQuarantine.getSelfQuarantineId()).orElseThrow(Exception::new);
+		foundSelfQuarantine.setSelfQuarantineDate(selfQuarantine.getSelfQuarantineDate());
+		foundSelfQuarantine.setSelfQuarantineRelease(selfQuarantine.getSelfQuarantineRelease());
+		return selfQuarantineRepository.save(foundSelfQuarantine);
 
-		} catch (Exception e) {
-			throw new Exception("환자 정보가 없다는");
-		}
 	}
 
 	public List<SelfQuarantine> findByselfQuarantineDateBetween(String start, String end) {
