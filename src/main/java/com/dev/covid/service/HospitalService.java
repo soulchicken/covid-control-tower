@@ -1,5 +1,6 @@
 package com.dev.covid.service;
 
+import com.dev.covid.DTO.HospitalDTO;
 import com.dev.covid.model.Hospital;
 import com.dev.covid.repository.HospitalRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +18,14 @@ public class HospitalService {
         return repository.findAll();
     }
 
-    public Hospital save(Hospital hospital) {
+    public Hospital save(HospitalDTO hospitalDTO) throws Exception {
+        Hospital hospital = Hospital
+                .builder()
+                .hospitalId(hospitalDTO.getHospitalId())
+                .hospitalName(hospitalDTO.getHospitalName())
+                .hospitalPatientnum(hospitalDTO.getHospitalPatientnum())
+                .hospitalRoomlimit(hospitalDTO.getHospitalRoomlimit())
+                .build();
         return repository.save(hospital);
     }
 
@@ -27,7 +35,6 @@ public class HospitalService {
         findHospital.ifPresent(updateHospital -> {
             updateHospital.setHospitalName(hospital.getHospitalName());
             updateHospital.setHospitalPatientnum((hospital.getHospitalPatientnum()));
-            updateHospital.setHospitalRoom(hospital.getHospitalRoom());
             updateHospital.setHospitalRoomlimit(hospital.getHospitalRoomlimit());
 
             repository.save(updateHospital);
