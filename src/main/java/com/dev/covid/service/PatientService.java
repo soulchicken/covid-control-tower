@@ -19,14 +19,19 @@ public class PatientService {
     private PatientRepository patientRepository;
 
     @Autowired
+    private HospitalRepository hospitalRepository;
+
+    @Autowired
     private ManagerRepository managerRepository;
 
     @Autowired
     private HospitalRepository hospitalRepository;
 
     public Patient save(PatientDTO patientDTO) throws Exception {
-        Manager manager = managerRepository.findById(patientDTO.getManagerId()).get();
-        Hospital hospital = hospitalRepository.findById(patientDTO.getHospitalId()).get();
+
+        Optional<Manager> foundManager = managerRepository.findById(patientDTO.getManagerId());
+        Hospital hospital = hospitalRepository.findById(patientDTO.getHospitalId()).orElseThrow(Exception::new);
+
         Patient patient = new Patient();
         patient.setManager(manager);
         patient.setPeoplePhone(patientDTO.getPeoplePhone());
