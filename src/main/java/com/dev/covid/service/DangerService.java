@@ -26,7 +26,7 @@ public class DangerService {
     }
 
     public Danger save(DangerDTO dangerDTO) throws Exception{
-       Patient patient = patientRepository.findById(dangerDTO.getPatientId()).get();
+       Patient patient = patientRepository.findById(dangerDTO.getPatientId()).orElseThrow(Exception::new);
         Danger newDanger = Danger
                 .builder()
                 .patient(patient)
@@ -39,7 +39,7 @@ public class DangerService {
     }
 
     public Danger update(DangerDTO dangerDTO) throws Exception{
-        final Danger findDanger = repository.findById(dangerDTO.getDangerId()).get();
+        final Danger findDanger = repository.findById(dangerDTO.getDangerId()).orElseThrow(Exception::new);
 
         findDanger.setDangerCareDate(dangerDTO.getDangerCareDate());
         findDanger.setDangerCareRelease(dangerDTO.getDangerCareRelease());
@@ -48,8 +48,8 @@ public class DangerService {
 
     }
 
-    public Danger delete(Long id) {
-       final Danger findDanger = repository.findById(id).get();
+    public Danger delete(Long id) throws Exception{
+       final Danger findDanger = repository.findById(id).orElseThrow(Exception::new);
             repository.delete(findDanger);
         return findDanger;
     }
