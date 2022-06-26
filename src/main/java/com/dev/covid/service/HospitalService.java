@@ -23,19 +23,12 @@ public class HospitalService {
     }
 
     public Hospital save(HospitalDTO hospitalDTO) throws Exception {
-        Hospital hospital = Hospital
-                .builder()
-                .hospitalId(hospitalDTO.getHospitalId())
-                .hospitalName(hospitalDTO.getHospitalName())
-                .hospitalPatientnum(hospitalDTO.getHospitalPatientnum())
-                .hospitalRoomlimit(hospitalDTO.getHospitalRoomlimit())
-                .build();
+        Hospital hospital = makeHospital(hospitalDTO);
         return hospitalRepository.save(hospital);
     }
 
     public Hospital update(HospitalDTO hospitalDTO) throws Exception {
-        Hospital findHospital = hospitalRepository.findById(hospitalDTO.getHospitalId()).get();
-
+        Hospital findHospital = hospitalRepository.findById(hospitalDTO.getHospitalId()).orElseThrow(Exception::new);
         findHospital.setHospitalName(hospitalDTO.getHospitalName());
         findHospital.setHospitalPatientnum((hospitalDTO.getHospitalPatientnum()));
         findHospital.setHospitalRoomlimit(hospitalDTO.getHospitalRoomlimit());
@@ -43,8 +36,27 @@ public class HospitalService {
     }
 
     public Hospital delete(Long id) throws  Exception {
-        final Hospital hospital = hospitalRepository.findById(id).get();
+        final Hospital hospital = hospitalRepository.findById(id).orElseThrow(Exception::new);
         hospitalRepository.delete(hospital);
         return hospital;
+    }
+
+    public HospitalDTO hospitalDTO(Hospital hospital){
+        return HospitalDTO
+                .builder()
+                .hospitalId(hospital.getHospitalId())
+                .hospitalName(hospital.getHospitalName())
+                .hospitalPatientnum(hospital.getHospitalPatientnum())
+                .hospitalRoomlimit(hospital.getHospitalRoomlimit())
+                .build();
+    }
+    public Hospital makeHospital(HospitalDTO hospitalDTO){
+        return Hospital
+                .builder()
+                .hospitalId(hospitalDTO.getHospitalId())
+                .hospitalName(hospitalDTO.getHospitalName())
+                .hospitalPatientnum(hospitalDTO.getHospitalPatientnum())
+                .hospitalRoomlimit(hospitalDTO.getHospitalRoomlimit())
+                .build();
     }
 }

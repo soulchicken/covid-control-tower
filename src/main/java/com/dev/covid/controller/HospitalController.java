@@ -46,22 +46,14 @@ public class HospitalController {
             );
         }
         return ResponseEntity.ok(hospitalDTOList);
-
-
     }
 
     // 삽입
     @PostMapping
     public ResponseEntity<?> save(@RequestBody HospitalDTO hospitalDTO) {
         try {
-            Hospital  hospital = hospitalService.save(hospitalDTO);
-            HospitalDTO newHospitalDTO = HospitalDTO
-                    .builder()
-                    .hospitalId(hospital.getHospitalId())
-                    .hospitalName(hospital.getHospitalName())
-                    .hospitalPatientnum(hospital.getHospitalPatientnum())
-                    .hospitalRoomlimit(hospital.getHospitalRoomlimit())
-                    .build();
+            Hospital newHospital = hospitalService.save(hospitalDTO);
+            HospitalDTO newHospitalDTO = hospitalService.hospitalDTO(newHospital);
             return ResponseEntity.ok(newHospitalDTO);
         } catch (Exception e) {
             log.error("병원정보의 등록에 실패했습니다." + e.getMessage());
@@ -75,19 +67,12 @@ public class HospitalController {
 
     public ResponseEntity<?> update(@RequestBody HospitalDTO updatehospital) {
         try {
-            Hospital hospital = hospitalService.update(updatehospital);
+            Hospital newHospital = hospitalService.update(updatehospital);
                 List<Long> hospitalRoomNumberList = new ArrayList<>();
-                for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()) {
+                for (HospitalRoom hospitalRoom : newHospital.getHospitalRoomList()) {
                     hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
                 }
-                HospitalDTO hospitalDTO = HospitalDTO
-                                .builder()
-                                .hospitalId(hospital.getHospitalId())
-                                .hospitalName(hospital.getHospitalName())
-                                .hospitalPatientnum(hospital.getHospitalPatientnum())
-                                .hospitalRoomlimit(hospital.getHospitalRoomlimit())
-                                .hospitalRoomNumberList(hospitalRoomNumberList)
-                                .build();
+                HospitalDTO hospitalDTO = hospitalService.hospitalDTO(newHospital);
             return ResponseEntity.ok(hospitalDTO);
         } catch (Exception e) {
             log.error("병원정보의 업데이트에 실패했습니다." + e.getMessage());
@@ -103,19 +88,12 @@ public class HospitalController {
 
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
         try {
-            Hospital hospital = hospitalService.delete(id);
-                List<Long> hospitalRoomNumberList = new ArrayList<>();
-                for (HospitalRoom hospitalRoom : hospital.getHospitalRoomList()) {
-                    hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
-                }
-                        HospitalDTO hospitalDTO =  HospitalDTO
-                                .builder()
-                                .hospitalId(hospital.getHospitalId())
-                                .hospitalName(hospital.getHospitalName())
-                                .hospitalPatientnum(hospital.getHospitalPatientnum())
-                                .hospitalRoomlimit(hospital.getHospitalRoomlimit())
-                                .hospitalRoomNumberList(hospitalRoomNumberList)
-                                .build();
+            Hospital newHospital = hospitalService.delete(id);
+            List<Long> hospitalRoomNumberList = new ArrayList<>();
+            for (HospitalRoom hospitalRoom : newHospital.getHospitalRoomList()) {
+                hospitalRoomNumberList.add(hospitalRoom.getHospitalroomRoomnumber());
+            }
+            HospitalDTO hospitalDTO = hospitalService.hospitalDTO(newHospital);
             return ResponseEntity.ok(hospitalDTO);
         } catch (Exception e) {
             log.error("병원정보의 삭제에 실패했습니다." + e.getMessage());
