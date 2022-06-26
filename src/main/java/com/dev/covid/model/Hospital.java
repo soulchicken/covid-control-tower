@@ -35,7 +35,6 @@ public class Hospital {
     @Column(name = "hospital_patientnum")
     private int hospitalPatientnum;
 
-
     @Column(name = "hospital_roomlimit")
     private int hospitalRoomlimit;
 

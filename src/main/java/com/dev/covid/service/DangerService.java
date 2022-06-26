@@ -3,9 +3,11 @@ package com.dev.covid.service;
 import com.dev.covid.DTO.DangerDTO;
 import com.dev.covid.DTO.PatientDTO;
 import com.dev.covid.model.Danger;
+import com.dev.covid.model.HospitalRoom;
 import com.dev.covid.model.Manager;
 import com.dev.covid.model.Patient;
 import com.dev.covid.repository.DangerRepository;
+import com.dev.covid.repository.HospitalRoomRepository;
 import com.dev.covid.repository.PatientRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,19 +23,23 @@ public class DangerService {
     @Autowired
     private PatientRepository patientRepository;
 
+    @Autowired
+    private HospitalRoomRepository hospitalRoomRepository;
+
     public List<Danger> findAll() {
         return repository.findAll();
     }
 
     public Danger save(DangerDTO dangerDTO) {
         Optional<Patient> patient = patientRepository.findById(dangerDTO.getPatientId());
+        Optional<HospitalRoom> hospitalRoom = hospitalRoomRepository.findById(dangerDTO.getHospitalRoomnumberId());
         Danger newDanger = Danger
                 .builder()
                 .patient(patient.get())
                 .dangerId(dangerDTO.getDangerId())
                 .dangerCareDate(dangerDTO.getDangerCareDate())
                 .dangerCareRelease(dangerDTO.getDangerCareRelease())
-                .hospitalRoomnumber(dangerDTO.getHospitalRoomnumber())
+                .hospitalRoom(hospitalRoom.get())
                 .build();
         Danger mDanger = repository.save(newDanger);
         return mDanger;
@@ -44,7 +50,6 @@ public class DangerService {
         findDanger.ifPresent(newDanger -> {
             newDanger.setDangerCareDate(danger.getDangerCareDate());
             newDanger.setDangerCareRelease(danger.getDangerCareRelease());
-            newDanger.setHospitalRoomnumber(danger.getHospitalRoomnumber());
 
 
             repository.save(newDanger);
@@ -69,7 +74,7 @@ public class DangerService {
                 .dangerId(danger.getDangerId())
                 .dangerCareDate(danger.getDangerCareDate())
                 .dangerCareRelease(danger.getDangerCareRelease())
-                .hospitalRoomnumber(danger.getHospitalRoomnumber())
+                .hospitalRoomnumberId(danger.getHospitalRoom().getHospitalroomRoomnumber())
                 .patientId(danger.getPatient().getPeopleId())
                 .build();
     }
