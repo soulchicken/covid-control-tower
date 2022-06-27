@@ -129,10 +129,10 @@
 ### **Infectiontracking** 테이블                                  
 | column          | data type | 설명      |        
 |-----------------| --- |---------|
-| user_index (PK) | BIGINT | 고유 인덱스  |
-| user_id         | VARCHAR(45) | 회원 아이디  |
-| user_name       | VARCHAR(45) | 회원 이름   |
-| password        | VARCHAR(45) | 회원 비밀번호 |
+| infectiontracking_id (PK) | LONG | 고유 인덱스  |
+| infectiontracking_area    | VARCHAR(45) | 감염경로 방문지역  |
+| infectiontracking_cause   | VARCHAR(45) | 감염경로 방문이유   |
+| infectiontracking_date    | LOCALDATE | 감염경로 방문날짜 |
 - 감염환자 동선 및 장소 정보가 저장된다.
 - 환자의 정보를 가지고 있다.
 
