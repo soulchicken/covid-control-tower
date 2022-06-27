@@ -38,40 +38,6 @@ public class DangerController {
         }
     }
 
-    @GetMapping("/date")
-    public List<DangerDTO> findBydangerCareDateBetween(@RequestParam("start") String start, @RequestParam("end") String end){
-        List<Danger> dangerList = dangerService.findBydangerCareDateBetween(start, end);
-
-        List<DangerDTO> dangerDTOList = new ArrayList<>();
-        for(Danger danger : dangerList){
-            dangerDTOList.add(
-                    dangerService.dangerDTO(danger)
-            );
-        }
-        return dangerDTOList;
-    }
-
-    @GetMapping("/release")
-    public List<DangerDTO> findBydangerCareReleaseBetween(@RequestParam("start") String start, @RequestParam("end") String end){
-        List<Danger> dangerList = dangerService.findBydangerCareReleaseBetween(start, end);
-
-        List<DangerDTO> dangerDTOList = new ArrayList<>();
-        for(Danger danger : dangerList){
-            dangerDTOList.add(
-                   dangerService.dangerDTO(danger)
-            );
-        }
-        return dangerDTOList;
-    }
-
-    @GetMapping("/{id}")
-    public DangerDTO findById(@PathVariable("id") Long id){
-        Danger danger = dangerService.findById(id);
-
-        DangerDTO dangerDTO = dangerService.dangerDTO(danger);
-        return dangerDTO;
-    }
-
     @PostMapping
     public ResponseEntity<?> save(@RequestBody DangerDTO dangerDTO) {
         try{
@@ -86,15 +52,12 @@ public class DangerController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody DangerDTO updateDangerDTO) {
+    public ResponseEntity<?> update(@RequestBody DangerDTO updateDanger) {
         try{
-            Danger dangerList = dangerService.update(updateDangerDTO);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
+            Danger danger = dangerService.update(updateDanger);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
 
-                dangerDTOList.add(
-                        dangerService.dangerDTO(dangerList)
-                );
-            return ResponseEntity.ok(dangerDTOList);
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
             log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -104,15 +67,13 @@ public class DangerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        try {
-           Danger dangerList = dangerService.delete(id);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
-                dangerDTOList.add(
-                        dangerService.dangerDTO(dangerList)
-                );
-            return ResponseEntity.ok(dangerDTOList);
+        try{
+            Danger danger = dangerService.delete(id);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
-            log.error("고위험군 환자 정보 삭제에 실패했습니다. :" + e.getMessage());
+            log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }
