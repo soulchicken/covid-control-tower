@@ -18,7 +18,7 @@ public class HospitalRoom {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "hospitalroom_roomnumber")
+    @Column(name = "hospitalroom_number")
     private Long hospitalroomRoomnumber;
 
     @Column(name = "hospitalroom_capacity")
