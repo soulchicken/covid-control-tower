@@ -38,7 +38,8 @@
 - 무슨 설명
 
 ## **05. ERD (Entity Relationship Diagram)**
-- ERD 그림 캡처본
+- ERD 그림 캡처본![최종안](https://user-images.githubusercontent.com/64244851/175840178-41868100-de85-4533-83be-76d58f2e6705.JPG)
+
 
 ### **patient** 테이블
 | column          | data type | 설명      |
