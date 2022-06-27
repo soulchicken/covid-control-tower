@@ -59,7 +59,11 @@ public class ManagerController {
     public ResponseEntity<?> put(@RequestBody ManagerDTO putManager) {
         try {
             Manager manager = managerService.update(putManager);
-            ManagerDTO managerDTO = managerService.managerToDTO(manager);
+            List<String> patientNameList = new ArrayList<>();
+            for (Patient patient : manager.getPatientList()){
+                patientNameList.add(patient.getPeopleName());
+            }
+            ManagerDTO managerDTO = managerService.managerToDTO(manager,patientNameList);
             return ResponseEntity.ok(managerDTO);
         } catch (Exception e) {
             log.error("환자관리자 정보 변경에 실패했습니다. : " + e.getStackTrace());
