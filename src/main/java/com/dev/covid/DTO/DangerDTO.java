@@ -6,8 +6,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Date;
-import java.util.List;
+
+import java.time.LocalDate;
+
+
 
 @Data
 @Builder
@@ -16,9 +18,8 @@ import java.util.List;
 public class DangerDTO {
     private Long dangerId;
     private Long patientId;
-    private Date dangerCareDate;
-    private Date dangerCareRelease;
-    private Long hospitalRoomnumberId;
-    private List<String> dangerList;
 
+    private LocalDate dangerCareDate;
+    private LocalDate dangerCareRelease;
+    private Long hospitalRoomnumberId;
 }

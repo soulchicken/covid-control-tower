@@ -3,8 +3,6 @@ package com.dev.covid.controller;
 import com.dev.covid.DTO.DangerDTO;
 import com.dev.covid.DTO.ResponseDTO;
 import com.dev.covid.model.Danger;
-import com.dev.covid.model.HospitalRoom;
-import com.dev.covid.model.InfectionTracking;
 import com.dev.covid.service.DangerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,15 +52,12 @@ public class DangerController {
     }
 
     @PutMapping
-    public ResponseEntity<?> update(@RequestBody DangerDTO updateDangerDTO) {
+    public ResponseEntity<?> update(@RequestBody DangerDTO updateDanger) {
         try{
-            Danger dangerList = dangerService.update(updateDangerDTO);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
+            Danger danger = dangerService.update(updateDanger);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
 
-                dangerDTOList.add(
-                        dangerService.dangerDTO(dangerList)
-                );
-            return ResponseEntity.ok(dangerDTOList);
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
             log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
@@ -72,15 +67,13 @@ public class DangerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> delete(@PathVariable("id") Long id) {
-        try {
-           Danger dangerList = dangerService.delete(id);
-            List<DangerDTO> dangerDTOList = new ArrayList<>();
-                dangerDTOList.add(
-                        dangerService.dangerDTO(dangerList)
-                );
-            return ResponseEntity.ok(dangerDTOList);
+        try{
+            Danger danger = dangerService.delete(id);
+            DangerDTO dangerDTO = dangerService.dangerDTO(danger);
+
+            return ResponseEntity.ok(dangerDTO);
         }catch (Exception e){
-            log.error("고위험군 환자 정보 삭제에 실패했습니다. :" + e.getMessage());
+            log.error("고위험군 환자 정보 변경에 실패했습니다. :" + e.getMessage());
             ResponseDTO responseDTO = ResponseDTO.builder().error(e.getMessage()).build();
             return  ResponseEntity.badRequest().body(responseDTO);
         }

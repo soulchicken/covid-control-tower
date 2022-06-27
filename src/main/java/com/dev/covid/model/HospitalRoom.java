@@ -7,6 +7,7 @@ import javax.persistence.*;
 import java.util.List;
 
 
+@Builder
 @RequiredArgsConstructor
 @AllArgsConstructor
 @Setter
@@ -14,8 +15,9 @@ import java.util.List;
 @Entity
 @Table(name = "hospitalroom")
 public class HospitalRoom {
-    
+
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "hospitalroom_roomnumber")
     private Long hospitalroomRoomnumber;
 
