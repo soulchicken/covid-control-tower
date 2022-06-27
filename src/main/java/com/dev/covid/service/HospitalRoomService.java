@@ -1,5 +1,6 @@
 package com.dev.covid.service;
 
+import com.dev.covid.DTO.DangerDTO;
 import com.dev.covid.DTO.HospitalRoomDTO;
 import com.dev.covid.model.Danger;
 import com.dev.covid.model.Hospital;
@@ -44,6 +45,7 @@ public class HospitalRoomService {
     }
 
     public HospitalRoomDTO hospitalRoomToDTO(HospitalRoom hospitalRoom) {
+
         return HospitalRoomDTO
                 .builder()
                 .hospitalId(hospitalRoom.getHospital().getHospitalId())
@@ -52,14 +54,35 @@ public class HospitalRoomService {
                 .build();
     }
 
+    public HospitalRoomDTO hospitalRoomToDTO(HospitalRoom hospitalRoom,List<DangerDTO> dangerDTOList) {
+
+        return HospitalRoomDTO
+                .builder()
+                .hospitalId(hospitalRoom.getHospital().getHospitalId())
+                .hospitalroomRoomnumber(hospitalRoom.getHospitalroomRoomnumber())
+                .hospitalroomCapacity(hospitalRoom.getHospitalroomCapacity())
+                .dangerDTOList(dangerDTOList)
+                .build();
+    }
+
     public List<HospitalRoomDTO> hospitalRoomToDTOList(List<HospitalRoom> hospitalRoomList) {
         List<HospitalRoomDTO> hospitalRoomDTOList = new ArrayList<>();
         for (HospitalRoom hospitalRoom : hospitalRoomList) {
-            List<String> dangerCareDateList = new ArrayList<>();
+
+            List<DangerDTO> dangerDTOList = new ArrayList<>();
             for (Danger danger : hospitalRoom.getDangerList()) {
-                dangerCareDateList.add(danger.getDangerCareDate().toString());
+                dangerDTOList.add(DangerDTO
+                                .builder()
+                                .dangerId(danger.getDangerId())
+                                .hospitalRoomnumberId(danger.getHospitalRoom().getHospitalroomRoomnumber())
+                                .patientId(danger.getPatient().getPeopleId())
+                                .dangerCareDate(danger.getDangerCareDate())
+                                .dangerCareRelease(danger.getDangerCareRelease())
+                                .build());
             }
-            hospitalRoomDTOList.add(hospitalRoomToDTO(hospitalRoom));
+
+            hospitalRoomDTOList.add(hospitalRoomToDTO(hospitalRoom,dangerDTOList));
+
         }
         return hospitalRoomDTOList;
     }

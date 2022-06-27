@@ -43,11 +43,10 @@ public class DangerService {
     }
 
     public Danger update(DangerDTO dangerDTO) throws Exception {
-        final Danger findDanger = repository.findById(dangerDTO.getDangerId()).orElseThrow(Exception::new);
 
+        final Danger findDanger = repository.findById(dangerDTO.getDangerId()).orElseThrow(Exception::new);
         findDanger.setDangerCareDate(dangerDTO.getDangerCareDate());
         findDanger.setDangerCareRelease(dangerDTO.getDangerCareRelease());
-
         return repository.save(findDanger);
 
     }
