@@ -22,10 +22,11 @@ public class Danger {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "danger_id")
     private Long dangerId;
+
     @Column(name = "danger_care_date")
     private LocalDate dangerCareDate;
-    @Column(name = "danger_care_release")
 
+    @Column(name = "danger_care_release")
     private LocalDate dangerCareRelease;
     @Column(name = "hospitalroom_roomnumber")
     private Long hospitalRoomnumber;

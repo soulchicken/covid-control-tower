@@ -13,6 +13,8 @@ import java.util.List;
 @AllArgsConstructor
 @Builder
 public class HospitalRoomDTO {
+
+    private long hospitalId;
     private long hospitalroomRoomnumber;
     private long hospitalroomCapacity;
     private List<HospitalDTO> hospitalDTOList;

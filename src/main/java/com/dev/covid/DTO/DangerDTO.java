@@ -21,7 +21,5 @@ public class DangerDTO {
 
     private LocalDate dangerCareDate;
     private LocalDate dangerCareRelease;
-    private Long hospitalRoomnumber;
-
-
+    private Long hospitalRoomnumberId;
 }
