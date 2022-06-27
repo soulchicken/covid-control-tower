@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("api/patient")
+@RequestMapping("patient")
 public class PatientController {
     @Autowired
     private PatientService patientService;
